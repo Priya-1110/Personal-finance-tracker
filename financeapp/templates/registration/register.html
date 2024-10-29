@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    {% load static %}
+    <!-- Link to the CSS file -->
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+</head>
+<body>
+    <div class="register-container">
+        {% block content %}
+            <h2>Register</h2>
+            <form method="POST">  <!-- Form will use POST method -->
+                {% csrf_token %}  <!-- CSRF token for security -->
+                {{ form.as_p }}  <!-- Render the form as paragraphs -->
+                <button type="submit">Register</button>  <!-- Submit button -->
+            </form>
+            <p>Already have an account? <a href="{% url 'login' %}">Login here</a>.</p>  <!-- Link to the login page -->
+        {% endblock %}
+    </div>
+</body>
+</html>
