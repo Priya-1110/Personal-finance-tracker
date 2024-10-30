@@ -17,6 +17,7 @@ urlpatterns = [
     path('savings_goals/', views.savings_goals, name='savings_goals'),
     path('reports/', views.reports, name='reports'),
     path('add_transaction/', views.add_transaction, name='add_transaction'),
-    path('generate_report/', views.generate_report, name='generate_report'),
+    path('download/csv/', views.download_transactions_csv, name='download_transactions_csv'),
+    path('download/excel/', views.download_transactions_excel, name='download_transactions_excel'),
     path('logout/', views.logout, name='logout'),
 ]

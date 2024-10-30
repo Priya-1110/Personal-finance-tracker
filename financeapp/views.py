@@ -220,77 +220,105 @@ def export_excel(transactions):
     output.seek(0)
     return output
 
-def generate_report(request):
-    # Extract filters from GET parameters
+@login_required
+def reports(request):
+    # Initialize variables
+    transactions = Transaction.objects.filter(user=request.user)
+    chart = None
+    from_date = request.POST.get('from_date', '')
+    to_date = request.POST.get('to_date', '')
+    category = request.POST.get('category', '')
+    transaction_type = request.POST.get('type', '')
+
+    # Filter transactions based on user input
+    if request.method == 'POST':
+        if from_date:
+            transactions = transactions.filter(date__gte=from_date)
+        if to_date:
+            transactions = transactions.filter(date__lte=to_date)
+        if transaction_type:
+            transactions = transactions.filter(type=transaction_type)
+
+        # Generate chart based on filtered transactions
+        if transactions.exists():
+            # Prepare data for the chart
+            categories = transactions.values('category').annotate(total=Sum('amount'))
+            labels = [cat['category'] for cat in categories]
+            totals = [cat['total'] for cat in categories]
+
+            # Create a pie chart
+            plt.figure(figsize=(8, 6))
+            plt.pie(totals, labels=labels, autopct='%1.1f%%')
+            plt.title('Transaction Distribution by Category')
+
+            # Save the plot to a BytesIO object
+            buf = io.BytesIO()
+            plt.savefig(buf, format='png')
+            plt.close()
+            buf.seek(0)
+            chart = base64.b64encode(buf.read()).decode('utf-8')
+
+    return render(request, 'reports.html', {'chart': chart})
+    
+def download_transactions_csv(request):
+    # Get the filtering parameters from the request
     from_date = request.GET.get('from_date')
     to_date = request.GET.get('to_date')
     category = request.GET.get('category')
     transaction_type = request.GET.get('type')
 
-    # Query transactions with filters
-    transactions = Transaction.objects.all()
-    if from_date and to_date:
-        transactions = transactions.filter(date__range=[from_date, to_date])
+    # Get the user's transactions and apply filters
+    transactions = Transaction.objects.filter(user=request.user)
+
+    if from_date:
+        transactions = transactions.filter(date__gte=from_date)
+    if to_date:
+        transactions = transactions.filter(date__lte=to_date)
     if category:
-        transactions = transactions.filter(category=category)
+        transactions = transactions.filter(category__icontains=category)
     if transaction_type:
         transactions = transactions.filter(type=transaction_type)
 
-    # Aggregate data for charts
-    income_sum = transactions.filter(type="Income").aggregate(Sum('amount'))['amount__sum'] or 0
-    expense_sum = transactions.filter(type="Expense").aggregate(Sum('amount'))['amount__sum'] or 0
-    net_savings = income_sum - expense_sum
+    # Create a DataFrame from the filtered transactions
+    df = pd.DataFrame(list(transactions.values('date', 'category', 'amount', 'type')))
 
-    # Category-wise breakdown for the chart
-    category_breakdown = (
-        transactions
-        .values('category')
-        .annotate(total_amount=Sum('amount'))
-        .order_by('-total_amount')
-    )
+    # Create the HTTP response with the appropriate content type for CSV
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="transactions.csv"'
 
-    # Convert to DataFrame for Matplotlib
-    category_df = pd.DataFrame(list(category_breakdown))
+    # Write the DataFrame to the response
+    df.to_csv(path_or_buf=response, index=False)
 
-    # Generate bar chart using Matplotlib
-    plt.figure(figsize=(10, 6))
-    plt.bar(category_df['category'], category_df['total_amount'], color='skyblue')
-    plt.xlabel('Category')
-    plt.ylabel('Total Amount')
-    plt.title('Category Breakdown')
+    return response
 
-    # Save chart to a PNG image in memory
-    chart_buffer = io.BytesIO()
-    plt.savefig(chart_buffer, format='png')
-    chart_buffer.seek(0)
-    chart_base64 = base64.b64encode(chart_buffer.getvalue()).decode('utf-8')
-    plt.close()
+def download_transactions_excel(request):
+    # Get the filtering parameters from the request
+    from_date = request.GET.get('from_date')
+    to_date = request.GET.get('to_date')
+    category = request.GET.get('category')
+    transaction_type = request.GET.get('type')
 
-    # Export CSV if requested
-    if request.GET.get('export') == 'csv':
-        df = pd.DataFrame(list(transactions.values('date', 'category', 'type', 'amount')))
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename=report.csv'
-        df.to_csv(path_or_buf=response, index=False)
-        return response
+    # Get the user's transactions and apply filters
+    transactions = Transaction.objects.filter(user=request.user)
 
-    # Export Excel if requested
-    if request.GET.get('export') == 'excel':
-        output = export_excel(transactions)
-        response = HttpResponse(
-            output,
-            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        )
-        response['Content-Disposition'] = 'attachment; filename=report.xlsx'
-        return response
+    if from_date:
+        transactions = transactions.filter(date__gte=from_date)
+    if to_date:
+        transactions = transactions.filter(date__lte=to_date)
+    if category:
+        transactions = transactions.filter(category__icontains=category)
+    if transaction_type:
+        transactions = transactions.filter(type=transaction_type)
 
-    # Context data for the HTML template
-    context = {
-        'transactions': transactions,
-        'income_sum': income_sum,
-        'expense_sum': expense_sum,
-        'net_savings': net_savings,
-        'category_chart': chart_base64,  # Pass encoded image to template
-    }
+    # Create a DataFrame from the filtered transactions
+    df = pd.DataFrame(list(transactions.values('date', 'category', 'amount', 'type')))
 
-    return render(request, 'reports.html', context)
+    # Create the HTTP response with the appropriate content type for Excel
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="transactions.xlsx"'
+
+    # Write the DataFrame to an Excel file
+    with pd.ExcelWriter(response, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False, sheet_name='Transactions')
+
+    return response
