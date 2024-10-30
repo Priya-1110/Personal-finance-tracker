@@ -1,0 +1,98 @@
+/* General reset */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f4f8; /* Soft background for contrast */
+}
+
+/* Header */
+header {
+    background-color: #3b5998; /* Richer, professional blue */
+    color: #ffffff;
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Card Container */
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 30px;
+    gap: 15px;
+}
+
+/* Card Style */
+.card {
+    background-color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    width: 220px;
+    padding: 25px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Soft shadow */
+}
+
+.card:hover {
+    transform: translateY(-8px); /* Lift effect on hover */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+}
+
+/* Card Text */
+.card h3 {
+    font-size: 1.2rem;
+    color: #333333;
+    margin: 0 0 10px;
+}
+
+.card p {
+    color: #666666;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* Add Transaction Button */
+.add-transaction {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background-color: #ff6b6b; /* Vivid coral color */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 65px;
+    height: 65px;
+    font-size: 35px;
+    text-align: center;
+    line-height: 65px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for emphasis */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.add-transaction:hover {
+    background-color: #ff4a4a;
+    transform: scale(1.1); /* Slightly enlarge on hover */
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 600px) {
+    .card {
+        width: 90%; /* Full-width on smaller screens */
+        margin: 10px 0;
+    }
+
+    .add-transaction {
+        width: 55px;
+        height: 55px;
+        font-size: 28px;
+        line-height: 55px;
+        bottom: 15px;
+        right: 15px;
+    }
+}

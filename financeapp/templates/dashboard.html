@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Personal Finance Tracker</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Your Personal Finance Tracker</h1>
+    </header>
+    
+    <main>
+        <div class="card-container">
+            <div class="card" onclick="location.href='{% url 'view_transactions' %}'">
+                <h2>View Transactions</h2>
+                <p>Check your past transactions and manage your finances.</p>
+            </div>
+            <div class="card" onclick="location.href='{% url 'view_budget' %}'">
+                <h2>Budget Overview</h2>
+                <p>Set budgets and see how you're doing against your goals.</p>
+            </div>
+            <div class="card" onclick="location.href='{% url 'savings_goals' %}'">
+                <h2>Savings Goals</h2>
+                <p>Track your savings goals and progress.</p>
+            </div>
+            <div class="card" onclick="location.href='{% url 'reports' %}'">
+                <h2>Reports</h2>
+                <p>Generate reports to analyze your financial health.</p>
+            </div>
+        <div class="card" onclick="location.href='{% url 'logout' %}'">
+                <h2>Logout</h2>
+        
+            </div>
+        </div>
+            
+
+        <button class="add-transaction" onclick="location.href='{% url 'add_transaction' %}'">+</button>
+    </main>
+</body>
+</html>

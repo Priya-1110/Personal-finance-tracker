@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Budget</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Your Budget</h1>
+        <nav>
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'view_transactions' %}">View Transactions</a>
+            <a href="{% url 'savings_goals' %}">Savings Goals</a>
+            <a href="{% url 'reports' %}">Reports</a>
+            <a href="{% url 'add_transaction' %}">Add Transactions</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Your Budget Overview</h2>
+        <table>
+            <tr>
+                <th>Category</th>
+                <th>Planned Amount</th>
+                <th>Actual Amount</th>
+                <th>Difference</th>
+            </tr>
+            {% for budget in budgets %}
+            <tr>
+                <td>{{ budget.category }}</td>
+                <td>{{ budget.planned_amount }}</td>
+                <td>{{ budget.actual_amount }}</td>
+                <td>{{ budget.difference }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No budget data found.</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </main>
+
+    <footer>
+        <p>© 2024 Personal Finance Tracker. All rights reserved.</p>
+    </footer>
+</body>
+</html>

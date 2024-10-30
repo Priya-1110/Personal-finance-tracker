@@ -1,0 +1,71 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f0f4f8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #333;
+}
+
+/* Container for the Registration Form */
+.register-container {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+}
+
+/* Form Heading */
+.register-container h2 {
+    color: #3b5998;
+    margin-bottom: 1rem;
+}
+
+/* Form Styling */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+button[type="submit"] {
+    background-color: #3b5998;
+    color: #ffffff;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #2d4373;
+}
+
+/* Link to Login */
+.register-container p {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+
+.register-container a {
+    color: #3b5998;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.register-container a:hover {
+    color: #2d4373;
+}

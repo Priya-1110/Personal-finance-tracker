@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report</title>
+</head>
+<body>
+    <h1>Report</h1>
+    
+    <form method="GET" action="">
+        <label for="from_date">From Date:</label>
+        <input type="date" name="from_date">
+        <label for="to_date">To Date:</label>
+        <input type="date" name="to_date">
+        <label for="category">Category:</label>
+        <input type="text" name="category">
+        <label for="type">Transaction Type:</label>
+        <select name="type">
+            <option value="">All</option>
+            <option value="Income">Income</option>
+            <option value="Expense">Expense</option>
+        </select>
+        <button type="submit">Generate Report</button>
+        <button type="submit" name="export" value="csv">Export CSV</button>
+        <button type="submit" name="export" value="excel">Export Excel</button>
+    </form>
+
+    <h2>Summary</h2>
+    <p>Total Income: {{ income_sum }}</p>
+    <p>Total Expenses: {{ expense_sum }}</p>
+    <p>Net Savings: {{ net_savings }}</p>
+
+<h2>Category Breakdown</h2>
+{% if category_chart %}
+    <img src="data:image/png;base64,{{ category_chart }}" alt="Category Breakdown Chart" />
+{% else %}
+    <p>Chart could not be generated.</p>
+{% endif %}
+
+</body>
+</html>
