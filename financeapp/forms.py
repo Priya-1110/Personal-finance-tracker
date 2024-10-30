@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Transaction
+from .models import Transaction, Budget
 
 # Custom form for user registration
 class UserRegisterForm(UserCreationForm):
@@ -17,3 +17,9 @@ class IncomeForm(forms.ModelForm):
     class Meta:
         model = Transaction
         fields = ['amount', 'date', 'category']  # Exclude 'type' as it's set in the view
+        
+class BudgetForm(forms.ModelForm):
+    class Meta:
+        model = Budget
+        fields = ['total_amount'] 
+        labels = {'total_amount': 'Set Your Budget'}

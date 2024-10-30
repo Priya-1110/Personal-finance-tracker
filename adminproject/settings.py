@@ -46,6 +46,9 @@ INSTALLED_APPS = [
     'financeapp'
 ]
 
+CELERY_BROKER_URL = 'redis://localhost:6379' # Or your preferred broker
+CELERY_RESULT_BACKEND = 'django-db'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

@@ -1,51 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Budget</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <title>My Budget</title>
+     {% load static %}
+    <link rel="stylesheet" href="{% static 'css/view_budget.css' %}">
+  <script>hljs.highlightAll();</script>
 </head>
 <body>
-    <header>
-        <h1>Your Budget</h1>
-        <nav>
-            <a href="{% url 'dashboard' %}">Dashboard</a>
-            <a href="{% url 'view_transactions' %}">View Transactions</a>
-            <a href="{% url 'savings_goals' %}">Savings Goals</a>
-            <a href="{% url 'reports' %}">Reports</a>
-            <a href="{% url 'add_transaction' %}">Add Transactions</a>
-            <a href="{% url 'logout' %}">Logout</a>
-        </nav>
-    </header>
+  <div class="container">
+    <h1>My Budget</h1>
 
-    <main>
-        <h2>Your Budget Overview</h2>
-        <table>
-            <tr>
-                <th>Category</th>
-                <th>Planned Amount</th>
-                <th>Actual Amount</th>
-                <th>Difference</th>
-            </tr>
-            {% for budget in budgets %}
-            <tr>
-                <td>{{ budget.category }}</td>
-                <td>{{ budget.planned_amount }}</td>
-                <td>{{ budget.actual_amount }}</td>
-                <td>{{ budget.difference }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="4">No budget data found.</td>
-            </tr>
-            {% endfor %}
-        </table>
-    </main>
+    <div class="budget-form">
+      <h2>Set Your Budget:</h2> 
+      <form method="post"> 
+        {% csrf_token %}
+        {{ form.as_p }} 
+        <button type="submit">Update Budget</button>
+      </form>
+    </div>
 
-    <footer>
-        <p>© 2024 Personal Finance Tracker. All rights reserved.</p>
-    </footer>
+    <h2>Overview</h2>
+    <div>
+      Total Budget: ${{ budget.total_amount }}
+    </div>
+    <div>
+      Total Income: ${{ total_income }}
+    </div>
+    <div>
+      Total Expenses: ${{ total_expenses }}
+    </div>
+    <div>
+      Balance: ${{ balance }}
+    </div>
+    <div class="budget-difference 
+         {% if budget_difference >= 0 %}positive{% else %}negative{% endif %}">
+      Budget Difference: ${{ budget_difference }} 
+    </div>
 </body>
 </html>

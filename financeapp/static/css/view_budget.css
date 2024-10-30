@@ -1,0 +1,67 @@
+/* style.css */
+
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+.container {
+  width: 80%;
+  margin: 20px auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+}
+
+h1, h2 {
+  color: #333;
+}
+
+.budget-form {
+  margin-bottom: 30px;
+}
+
+form input[type="number"] {
+  width: 100px;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button[type="submit"] {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.overview div {
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+/* Conditional styling for budget difference */
+.budget-difference {
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.budget-difference.positive { /* Apply when budget_difference is positive */
+  color: white;
+  background-color: green;
+}
+
+.budget-difference.negative { /* Apply when budget_difference is negative */
+  color: white;
+  background-color: red;
+}

@@ -2,19 +2,18 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import UserRegisterForm, IncomeForm
-from .models import Transaction
+from .forms import UserRegisterForm, IncomeForm, BudgetForm  
+from .models import Transaction, Budget
 from django.contrib.auth.models import User
 from django.contrib.auth import logout as auth_logout
 from django.utils import timezone
 from django.contrib import messages
 from django.views.decorators.http import require_POST
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 import pandas as pd
 from django.db.models import Sum
 import json
 import io
-from django.http import HttpResponse
 import xlsxwriter
 import matplotlib.pyplot as plt
 import base64
@@ -68,32 +67,36 @@ def view_transactions(request):
     # Logic to retrieve and display transactions
     return render(request, 'view_transactions.html')
 
-# @login_required
-# def add_income(request):
-#     if request.method == 'POST':
-#         form = IncomeForm(request.POST)
-#         if form.is_valid():
-#             income = form.save(commit=False)  # Get form data without saving yet
-#             income.user = request.user         # Associate income with the logged-in user
-#             income.date = timezone.now()       # Set the date to the current time if not in form
-#             income.type = 'Income'             # Ensure the type is set to "Income"
-#             income.save()                      # Save to the database
-#             messages.success(request, 'Income added successfully!')
-#             return redirect('dashboard')       # Redirect to dashboard or income view
-#         else:
-#             messages.error(request, 'Please correct the errors below.')
-#     else:
-#         form = IncomeForm()
-
-#     return render(request, 'add_income.html', {'form': form})
-
-# def add_expense(request):
-#     # Logic to add expense
-#     return render(request, 'add_expense.html')
-
+@login_required
 def view_budget(request):
-    # Logic to view budget
-    return render(request, 'view_budget.html')
+    budget, created = Budget.objects.get_or_create(user=request.user)
+    transactions = Transaction.objects.filter(user=request.user)
+
+    if request.method == 'POST':
+        form = BudgetForm(request.POST, instance=budget)
+        if form.is_valid():
+            form.save()
+            return redirect('view_budget') # Redirect to avoid form resubmission
+    else:
+        form = BudgetForm(instance=budget)
+
+    # Calculate income, expenses, and balance
+    total_income = sum(t.amount for t in transactions if t.type == Transaction.INCOME)
+    total_expenses = sum(t.amount for t in transactions if t.type == Transaction.EXPENSE)
+    balance =  total_income - total_expenses
+    budget_difference = budget.total_amount - total_expenses
+
+
+    context = {
+        'budget': budget, 
+        'transactions': transactions,
+        'total_income': total_income,
+        'total_expenses': total_expenses,
+        'balance': balance,
+        'budget_difference': budget_difference,  
+        'form': form,  # Add the form to the context
+    }
+    return render(request, 'view_budget.html', context) 
 
 def savings_goals(request):
     # Logic to manage savings goals
@@ -207,27 +210,55 @@ def logout(request):
     return redirect('home')  # Redirect to home page after logout
     
 
-# Ensure 'Agg' backend is used for non-GUI environments
-matplotlib.use('Agg')
+# @login_required
+# def reports(request):
+#     # Initialize variables
+#     transactions = Transaction.objects.filter(user=request.user)
+#     chart = None
+#     from_date = request.POST.get('from_date', '')
+#     to_date = request.POST.get('to_date', '')
+#     category = request.POST.get('category', '')
+#     transaction_type = request.POST.get('type', '')
 
-def export_excel(transactions):
-    # Use a buffer to store the Excel file in memory
-    output = io.BytesIO()
-    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-        df = pd.DataFrame(list(transactions.values('date', 'category', 'type', 'amount')))
-        df.to_excel(writer, index=False, sheet_name='Transactions')
-    
-    output.seek(0)
-    return output
+#     # Filter transactions based on user input
+#     if request.method == 'POST':
+#         if from_date:
+#             transactions = transactions.filter(date__gte=from_date)
+#         if to_date:
+#             transactions = transactions.filter(date__lte=to_date)
+#         if transaction_type:
+#             transactions = transactions.filter(type=transaction_type)
+
+#         # Generate chart based on filtered transactions
+#         if transactions.exists():
+#             # Prepare data for the chart
+#             categories = transactions.values('category').annotate(total=Sum('amount'))
+#             labels = [cat['category'] for cat in categories]
+#             totals = [cat['total'] for cat in categories]
+
+#             # Create a pie chart
+#             plt.figure(figsize=(8, 6))
+#             plt.pie(totals, labels=labels, autopct='%1.1f%%')
+#             plt.title('Transaction Distribution by Category')
+
+#             # Save the plot to a BytesIO object
+#             buf = io.BytesIO()
+#             plt.savefig(buf, format='png')
+#             plt.close()
+#             buf.seek(0)
+#             chart = base64.b64encode(buf.read()).decode('utf-8')
+
+#     return render(request, 'reports.html', {'chart': chart})
+  
+
 
 @login_required
 def reports(request):
     # Initialize variables
     transactions = Transaction.objects.filter(user=request.user)
-    chart = None
+    chart_data = None
     from_date = request.POST.get('from_date', '')
     to_date = request.POST.get('to_date', '')
-    category = request.POST.get('category', '')
     transaction_type = request.POST.get('type', '')
 
     # Filter transactions based on user input
@@ -239,27 +270,21 @@ def reports(request):
         if transaction_type:
             transactions = transactions.filter(type=transaction_type)
 
-        # Generate chart based on filtered transactions
+        # Generate data for charts
         if transactions.exists():
-            # Prepare data for the chart
             categories = transactions.values('category').annotate(total=Sum('amount'))
             labels = [cat['category'] for cat in categories]
-            totals = [cat['total'] for cat in categories]
+            totals = [float(cat['total']) for cat in categories]  # Convert Decimal to float
+            
+            # Prepare data for JSON
+            chart_data = json.dumps({
+                'labels': labels,
+                'totals': totals
+            })
 
-            # Create a pie chart
-            plt.figure(figsize=(8, 6))
-            plt.pie(totals, labels=labels, autopct='%1.1f%%')
-            plt.title('Transaction Distribution by Category')
+    return render(request, 'reports.html', {'chart_data': chart_data})
 
-            # Save the plot to a BytesIO object
-            buf = io.BytesIO()
-            plt.savefig(buf, format='png')
-            plt.close()
-            buf.seek(0)
-            chart = base64.b64encode(buf.read()).decode('utf-8')
 
-    return render(request, 'reports.html', {'chart': chart})
-    
 def download_transactions_csv(request):
     # Get the filtering parameters from the request
     from_date = request.GET.get('from_date')
