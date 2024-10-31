@@ -14,10 +14,13 @@ urlpatterns = [
     # path('add_income/', views.add_income, name='add_income'),
     # path('add_expense/', views.add_expense, name='add_expense'),
     path('view_budget/', views.view_budget, name='view_budget'),
-    path('savings_goals/', views.savings_goals, name='savings_goals'),
+    path('savings-goals/', views.savings_goals_view, name='savings_goals'),
+    path('savings-goals/add/', views.add_savings_goal, name='add_savings_goal'),
+    path('savings-goals/<int:goal_id>/log-savings/', views.log_savings, name='log_savings'),
     path('reports/', views.reports, name='reports'),
     path('add_transaction/', views.add_transaction, name='add_transaction'),
     path('download/csv/', views.download_transactions_csv, name='download_transactions_csv'),
     path('download/excel/', views.download_transactions_excel, name='download_transactions_excel'),
+    path('contact/', views.contact_view, name='contact'),  # Contact form
     path('logout/', views.logout, name='logout'),
 ]

@@ -3,50 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Savings Goals</title>
+    <title>Your Savings Goals</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/savings_goals.css' %}"> 
 </head>
 <body>
-    <header>
-        <h1>Savings Goals</h1>
-        <nav>
-            <a href="{% url 'dashboard' %}">Dashboard</a>
-            <a href="{% url 'view_transactions' %}">View Transactions</a>
-            <a href="{% url 'view_budget' %}">View Budget</a>
-            <a href="{% url 'reports' %}">Reports</a>
-            <a href="{% url 'add_transaction' %}">Add Transactions</a>
-            <a href="{% url 'logout' %}">Logout</a>
-        </nav>
-    </header>
 
-    <main>
+    <div class="container my-5">
         <h2>Your Savings Goals</h2>
-        <table>
-            <tr>
-                <th>
-                <th>Goal</th>
-                <th>Target Amount</th>
-                <th>Current Amount</th>
-                <th>Status</th>
-            </tr>
-            {% for goal in savings_goals %}
-            <tr>
-                <td>{{ goal.name }}</td>
-                <td>{{ goal.target_amount }}</td>
-                <td>{{ goal.current_amount }}</td>
-                <td>{{ goal.status }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="4">No savings goals found.</td>
-            </tr>
-            {% endfor %}
-        </table>
-    </main>
 
-    <footer>
-        <p>© 2024 Personal Finance Tracker. All rights reserved.</p>
-    </footer>
+        <a href="{% url 'add_savings_goal' %}" class="btn btn-primary">Add New Goal</a>
+
+        <div class="row mt-4">
+            {% for goal in goals %}
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ goal.name }}</h5>
+                        <p class="card-text">
+                            Target: ${{ goal.target_dollars|floatformat:2 }}<br> 
+                            Saved: ${{ goal.current_dollars|floatformat:2 }} 
+                        </p>
+
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" 
+                                 style="width: {% widthratio goal.current_amount goal.target_amount 100 %}%"
+                                 aria-valuenow="{{ goal.current_amount }}" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="{{ goal.target_amount }}">
+                                {% widthratio goal.current_amount goal.target_amount 100 %}% 
+                            </div>
+                        </div>
+
+                        <a href="{% url 'log_savings' goal.id %}" class="btn btn-sm btn-success mt-2">Log Savings</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
 </body>
 </html>

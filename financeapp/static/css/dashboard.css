@@ -96,3 +96,7 @@ header {
         right: 15px;
     }
 }
+.feedback-link i { 
+    font-size: 2em; /* Adjust the size */
+    color: white;   /* Change the color */
+}

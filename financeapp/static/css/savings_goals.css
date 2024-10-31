@@ -1,0 +1,89 @@
+body {
+    font-family: 'Poppins', sans-serif; /* A more stylish font */
+    background-color: #f4f4f4; /* Light neutral background */
+}
+
+.container {
+    max-width: 960px;
+    padding: 50px 0;
+}
+
+h2 {
+    color: #2c3e50; /* Dark blue-gray heading */
+    font-weight: 600;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: #3498db; /* Vivid blue button */
+    border-color: #3498db;
+    border-radius: 25px; /* Rounded button corners */
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+    border-color: #2980b9;
+    box-shadow: 0px 5px 10px rgba(52, 152, 219, 0.5); /* Button shadow on hover */
+}
+
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+    transition: transform 0.3s ease;
+    background-color: #fff; /* White card background */
+    overflow: hidden; /* For the gradient effect below */
+    position: relative; /* For positioning the progress bar */
+}
+
+.card:hover {
+    transform: translateY(-5px); 
+}
+
+.card-body {
+    padding: 30px;
+    position: relative; /* For positioning elements within the card */
+    z-index: 2; /* Ensure content appears above the gradient */
+}
+
+.card-title {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.card-text {
+    margin-bottom: 1.5rem;
+    color: #6c757d; 
+}
+
+/* Progress Bar Styling */
+.progress {
+    height: 12px; /* Thinner progress bar */
+    background-color: transparent; /* Hide the default background */
+    border-radius: 10px;
+    overflow: hidden;
+    position: absolute; /* Position at the bottom of the card */
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.progress-bar {
+    background-image: linear-gradient(to right, #f39c12, #e74c3c); /* More vibrant gradient */
+    transition: width 0.6s ease-in-out; 
+    height: 100%; 
+}
+
+/* Add a subtle gradient to the card on hover */
+.card:hover::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom right, rgba(243, 156, 18, 0.1), rgba(231, 76, 60, 0.1)); 
+    z-index: 1; /* Place the gradient behind the content */
+}

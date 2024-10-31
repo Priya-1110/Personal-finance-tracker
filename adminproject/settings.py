@@ -43,11 +43,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'financeapp'
+    'financeapp',
+    'django_crontab',
+    'bootstrap4'
 ]
 
-CELERY_BROKER_URL = 'redis://localhost:6379' # Or your preferred broker
-CELERY_RESULT_BACKEND = 'django-db'
+CRONJOBS = [
+    ('0 0 * * *', 'financeapp.tasks.check_budgets'),  # daily at midnight
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -133,3 +136,12 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# settings.py
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'priyashan112002@gmail.com'  # Your email address
+EMAIL_HOST_PASSWORD = 'ikew nmoa dhij vmsm'     # Your email password
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER 

@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Transaction, Budget
+from .models import Transaction, Budget, Contact, SavingsGoal, SavingsTransaction
 
 # Custom form for user registration
 class UserRegisterForm(UserCreationForm):
@@ -23,3 +23,27 @@ class BudgetForm(forms.ModelForm):
         model = Budget
         fields = ['total_amount'] 
         labels = {'total_amount': 'Set Your Budget'}
+        
+class ContactForm(forms.Form):
+    """Form for contact messages"""
+    name = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'placeholder': 'Your Name'}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'Your Email'}))
+    subject = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'placeholder': 'Subject'}))
+    message = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Your Message'}))
+    
+class SavingsGoalForm(forms.ModelForm):
+    class Meta:
+        model = SavingsGoal
+        fields = ['name', 'target_amount', 'deadline'] 
+        widgets = {
+            'deadline': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+class SavingsTransactionForm(forms.ModelForm):
+    class Meta:
+        model = SavingsTransaction
+        fields = ['amount', 'date']
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date'}),
+        }
+        

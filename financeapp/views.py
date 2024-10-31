@@ -1,9 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import UserRegisterForm, IncomeForm, BudgetForm  
-from .models import Transaction, Budget
+from .forms import UserRegisterForm, IncomeForm, BudgetForm, ContactForm
+from .models import Transaction, Budget,Contact
 from django.contrib.auth.models import User
 from django.contrib.auth import logout as auth_logout
 from django.utils import timezone
@@ -18,6 +18,12 @@ import xlsxwriter
 import matplotlib.pyplot as plt
 import base64
 import matplotlib
+from django.core.mail import send_mail
+from django.conf import settings
+from .models import SavingsGoal, SavingsTransaction
+from .forms import SavingsGoalForm, SavingsTransactionForm
+
+
 
 
 # Create your views here.
@@ -62,11 +68,8 @@ def login_view(request):
 def dashboard(request):
     return render(request, 'dashboard.html')
 
-    
-def view_transactions(request):
-    # Logic to retrieve and display transactions
-    return render(request, 'view_transactions.html')
 
+    
 @login_required
 def view_budget(request):
     budget, created = Budget.objects.get_or_create(user=request.user)
@@ -98,13 +101,50 @@ def view_budget(request):
     }
     return render(request, 'view_budget.html', context) 
 
-def savings_goals(request):
-    # Logic to manage savings goals
-    return render(request, 'savings_goals.html')
+@login_required
+def savings_goals_view(request):
+    goals = SavingsGoal.objects.filter(user=request.user)
 
-def reports(request):
-    # Logic to generate reports
-    return render(request, 'reports.html')
+    # Calculate and add target_dollars and current_dollars to each goal
+    for goal in goals:
+        goal.target_dollars = goal.target_amount 
+        goal.current_dollars = goal.current_amount 
+
+    return render(request, 'savings_goals.html', {'goals': goals})
+
+
+@login_required
+def add_savings_goal(request):
+    if request.method == 'POST':
+        form = SavingsGoalForm(request.POST)
+        if form.is_valid():
+            goal = form.save(commit=False)  
+            goal.user = request.user  
+            goal.save()
+            return redirect('savings_goals')
+    else:
+        form = SavingsGoalForm()
+    return render(request, 'add_savings_goal.html', {'form': form})
+
+@login_required
+def log_savings(request, goal_id):
+    goal = get_object_or_404(SavingsGoal, pk=goal_id, user=request.user) 
+    if request.method == 'POST':
+        form = SavingsTransactionForm(request.POST)
+        if form.is_valid():
+            transaction = form.save(commit=False)
+            transaction.goal = goal
+            transaction.save()
+
+            # Update goal's current amount
+            goal.current_amount += transaction.amount
+            goal.save() 
+
+            return redirect('savings_goals')
+    else:
+        form = SavingsTransactionForm()
+    return render(request, 'log_savings.html', {'form': form, 'goal': goal})
+
 
 @login_required
 def add_transaction(request):
@@ -133,17 +173,15 @@ def add_transaction(request):
 
     return render(request, 'add_transaction.html')
 
-
-# View for viewing transactions
+@login_required   
 def view_transactions(request):
+    transactions = Transaction.objects.filter(user=request.user).order_by('-date')
     # Get filter parameters
     from_date = request.GET.get('from_date')
     to_date = request.GET.get('to_date')
     category = request.GET.get('category')
     transaction_type = request.GET.get('type')
 
-    # Querying the database based on filters
-    transactions = Transaction.objects.all()
     
     if from_date:
         transactions = transactions.filter(date__gte=from_date)
@@ -347,3 +385,26 @@ def download_transactions_excel(request):
         df.to_excel(writer, index=False, sheet_name='Transactions')
 
     return response
+def contact_view(request):
+    """Contact form view to send messages"""
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            message = form.cleaned_data['message']
+
+            # Send the email
+            send_mail(
+                f'Message from {name} <{email}>',
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                ['priyashan112002@gmail.com'],
+                fail_silently=False, 
+            )
+            messages.success(request, "Your message has been sent successfully!")
+            return redirect('contact')  # Redirect to the contact view itself
+    else:
+        form = ContactForm()
+
+    return render(request, 'contact.html', {'form': form})
