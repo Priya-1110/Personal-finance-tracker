@@ -13,10 +13,26 @@
         <h1>Your Personal Finance Tracker</h1>
             <a href="{% url 'contact' %}" class="feedback-link"> 
         <i class="fas fa-phone"></i> 
+        
     </a>
     </header>
     
     <main>
+                <div class="notifications"> 
+            {% if unread_notifications %}
+            <ul>
+                {% for notification in unread_notifications %}
+                <li>
+                    {% if notification.link %}
+                    <a href="{{ notification.link }}">{{ notification.message }}</a>
+                    {% else %}
+                    {{ notification.message }}
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
         <div class="card-container">
             <div class="card" onclick="location.href='{% url 'view_transactions' %}'">
                 <h2>View Transactions</h2>
@@ -32,6 +48,10 @@
             </div>
             <div class="card" onclick="location.href='{% url 'reports' %}'">
                 <h2>Reports</h2>
+                <p>Generate reports to analyze your financial health.</p>
+            </div>
+                <div class="card" onclick="location.href='{% url 'alerts' %}'">
+                <h2>Alerts and Notifications</h2>
                 <p>Generate reports to analyze your financial health.</p>
             </div>
         <div class="card" onclick="location.href='{% url 'logout' %}'">

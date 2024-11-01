@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-h(44p0*!^7ehh4u$87rv0$_nc2^n*0rjzegb&5rbwu49438v8u'
+SECRET_KEY = config('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -44,12 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'financeapp',
-    'django_crontab',
     'bootstrap4'
-]
-
-CRONJOBS = [
-    ('0 0 * * *', 'financeapp.tasks.check_budgets'),  # daily at midnight
 ]
 
 MIDDLEWARE = [
@@ -142,6 +138,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'priyashan112002@gmail.com'  # Your email address
-EMAIL_HOST_PASSWORD = 'ikew nmoa dhij vmsm'     # Your email password
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')  # Your email address
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')    # Your email password
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER 

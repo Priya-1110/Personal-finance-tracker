@@ -93,10 +93,7 @@ def view_budget(request):
                 # *** Send Notification Only if Budget Changes ***
                 if form.has_changed():
                     # Delete existing budget notifications for the user
-                    Notification.objects.filter( # pylint: disable=no-member
-                    user=request.user, 
-                    link=reverse('view_budget')
-                    ).delete() 
+                    Notification.objects.filter(user=request.user, link=reverse('view_budget')).delete() # pylint: disable=no-member
 
                     # Create a new notification
                     create_notification(
@@ -110,7 +107,6 @@ def view_budget(request):
             return redirect('view_budget')
     else:
         form = BudgetForm(instance=budget)
-        
     if total_expenses > budget.total_amount:
         # Delete existing budget notifications for the user
         Notification.objects.filter(user=request.user, link=reverse('view_budget')).delete() # pylint: disable=no-member

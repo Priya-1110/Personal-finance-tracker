@@ -1,0 +1,25 @@
+/* financeapp/static/css/alerts.css */
+
+.notifications {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.notifications ul {
+    list-style: none;
+    padding: 0;
+}
+
+.notifications li {
+    margin-bottom: 10px; 
+}
+
+.notifications a {
+    text-decoration: none; 
+    color: #007bff; /* Blue link color */
+}
+
+.notifications a:hover {
+    text-decoration: underline;
+}
