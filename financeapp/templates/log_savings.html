@@ -4,19 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log Savings</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> 
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/log_savings.css' %}"> 
+    <link rel="stylesheet" href="{% static 'css/log_savings.css' %}">
 </head>
 <body>
-    <div class="container my-5">
+    <header>
+        <h1>Log Savings</h1>
+    </header>
+
+    <main>
         <h2>Log Savings for: {{ goal.name }}</h2>
-        <form method="post">
+        <form method="post" class="log-savings-form">
             {% csrf_token %}
-            {% load bootstrap4 %} 
-            {% bootstrap_form form %} 
-            <button type="submit" class="btn btn-success">Log Savings</button>
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <div class="error-message">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn-submit">Log Savings</button>
         </form>
-    </div>
+        
+        <a href="{% url 'savings_goals' %}" class="back-link">Back to Savings Goals</a>
+    </main>
 </body>
 </html>

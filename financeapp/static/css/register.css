@@ -3,69 +3,253 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-    background-color: #f0f4f8;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    color: #333;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+    /* Subtle gradient background */
+    background: linear-gradient(135deg, #1a1a1a 0%, #1f2b1f 100%);
 }
 
-/* Container for the Registration Form */
+/* Subtle pattern overlay */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    filter: brightness(0.7) contrast(1.2);
+    z-index: -1;
+    transform: translateY(50px);
+}
+
+/* Register Container */
 .register-container {
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: rgba(26, 26, 26, 0.9);
+    padding: 2.5rem;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
     width: 90%;
     max-width: 400px;
     text-align: center;
+    animation: fadeIn 0.8s ease-out;
 }
 
-/* Form Heading */
+/* Heading Styles */
 .register-container h2 {
-    color: #3b5998;
-    margin-bottom: 1rem;
+    color: #4CAF50;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-weight: 600;
 }
 
-/* Form Styling */
+/* Form Styles */
 form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 1.2rem;
+    margin-bottom: 1.5rem;
 }
 
+/* Form Paragraph (Django form wrapper) */
+form p {
+    text-align: left;
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+/* Labels */
+form label {
+    display: block;
+    color: #4CAF50;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Input Fields */
+form input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #4CAF50;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #4CAF50;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+form input:focus {
+    outline: none;
+    border-color: #45a049;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Submit Button */
 button[type="submit"] {
-    background-color: #3b5998;
-    color: #ffffff;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
+    background: linear-gradient(45deg, transparent 50%, #45a049 50%);
+    background-size: 250% 100%;
+    background-position: right bottom;
+    color: #4CAF50;
+    padding: 12px;
+    border: 2px solid #4CAF50;
+    border-radius: 25px;
     cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
+    font-size: 1.1rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.4s ease;
+    margin-top: 1rem;
+    width: 100%;
 }
 
 button[type="submit"]:hover {
-    background-color: #2d4373;
+    background-position: left bottom;
+    color: #ffffff;
+    border-color: #45a049;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
 }
 
-/* Link to Login */
+/* Login Link */
 .register-container p {
-    margin-top: 1rem;
+    color: #4CAF50;
     font-size: 0.9rem;
+    margin-top: 1rem;
 }
 
 .register-container a {
-    color: #3b5998;
+    color: #45a049;
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 500;
+    transition: all 0.3s ease;
 }
 
 .register-container a:hover {
-    color: #2d4373;
+    color: #4CAF50;
+    text-decoration: underline;
+}
+
+/* Help Text */
+.helptext {
+    display: block;
+    color: #4CAF50;
+    font-size: 0.8rem;
+    margin-top: 0.3rem;
+    opacity: 0.8;
+}
+
+/* Error Messages */
+.errorlist {
+    list-style: none;
+    color: #ff6b6b;
+    font-size: 0.85rem;
+    margin-top: 0.3rem;
+    text-align: left;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media screen and (max-width: 480px) {
+    .register-container {
+        padding: 2rem;
+        width: 95%;
+    }
+
+    .register-container h2 {
+        font-size: 1.8rem;
+    }
+
+    button[type="submit"] {
+        padding: 10px;
+        font-size: 1rem;
+    }
+}
+
+/* Django Messages */
+.messages {
+    list-style: none;
+    margin-bottom: 1rem;
+    padding: 0;
+}
+
+.messages li {
+    padding: 10px;
+    margin-bottom: 0.5rem;
+    border-radius: 5px;
+    font-size: 0.9rem;
+}
+
+.messages .success {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+    border: 1px solid #4CAF50;
+}
+
+.messages .error {
+    background-color: rgba(255, 107, 107, 0.1);
+    color: #ff6b6b;
+    border: 1px solid #ff6b6b;
+}
+
+/* Password Strength Indicator */
+.password-strength {
+    height: 5px;
+    margin-top: 5px;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.weak {
+    background-color: #ff6b6b;
+    width: 33%;
+}
+
+.medium {
+    background-color: #ffd93d;
+    width: 66%;
+}
+
+.strong {
+    background-color: #4CAF50;
+    width: 100%;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Focus Styles for Accessibility */
+*:focus {
+    outline: 2px solid #4CAF50;
+    outline-offset: 2px;
 }

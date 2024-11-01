@@ -9,99 +9,143 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <main>
-        <h2>Transaction Reports</h2>
-        <form method="POST">
-            {% csrf_token %}
-            <label for="from_date">From Date:</label>
-            <input type="date" name="from_date" id="from_date">
-            <br>
-            <label for="to_date">To Date:</label>
-            <input type="date" name="to_date" id="to_date">
-            <label for="type">Transaction Type:</label>
-            <select name="type" id="type">
-                <option value="">All</option>
-                <option value="Income">Income</option>
-                <option value="Expense">Expense</option>
-            </select>
-            <br>
-            <button type="submit">Generate Report</button>
-        </form>
+    <header>
+        <h1>Transaction Reports</h1>
+    </header>
 
-        {% if chart_data %}
-            <div class="chart-container">
-                <h3>Transaction Distribution (Pie Chart)</h3>
-                <canvas id="transactionPieChart" width="400" height="400"></canvas>
-                
-                <h3>Transaction Distribution (Bar Graph)</h3>
-                <canvas id="transactionBarChart" width="400" height="400"></canvas>
-            </div>
-            <script>
-                const data = JSON.parse('{{ chart_data|escapejs }}');
-                const pieCtx = document.getElementById('transactionPieChart').getContext('2d');
-                const barCtx = document.getElementById('transactionBarChart').getContext('2d');
-                
-                // Pie Chart
-                new Chart(pieCtx, {
-                    type: 'pie',
-                    data: {
-                        labels: data.labels,
-                        datasets: [{
-                            data: data.totals,
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.6)',
-                                'rgba(54, 162, 235, 0.6)',
-                                'rgba(255, 206, 86, 0.6)',
-                                'rgba(75, 192, 192, 0.6)',
-                                'rgba(153, 102, 255, 0.6)',
-                                'rgba(255, 159, 64, 0.6)'
-                            ]
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                            },
+    <main>
+        <div class="report-container">
+            <form method="POST" class="report-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="from_date">From Date:</label>
+                    <input type="date" name="from_date" id="from_date">
+                </div>
+
+                <div class="form-group">
+                    <label for="to_date">To Date:</label>
+                    <input type="date" name="to_date" id="to_date">
+                </div>
+
+                <div class="form-group">
+                    <label for="type">Transaction Type:</label>
+                    <select name="type" id="type">
+                        <option value="">All</option>
+                        <option value="Income">Income</option>
+                        <option value="Expense">Expense</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-submit">Generate Report</button>
+            </form>
+
+            {% if chart_data %}
+                <div class="charts-section">
+                    <div class="chart-container">
+                        <h3>Transaction Distribution (Pie Chart)</h3>
+                        <canvas id="transactionPieChart"></canvas>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <h3>Transaction Distribution (Bar Graph)</h3>
+                        <canvas id="transactionBarChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="download-section">
+                    <a href="{% url 'download_transactions_csv' %}?from_date={{ from_date }}&to_date={{ to_date }}&type={{ type }}" class="download-btn">Download as CSV</a>
+                    <a href="{% url 'download_transactions_excel' %}?from_date={{ from_date }}&to_date={{ to_date }}&type={{ type }}" class="download-btn">Download as Excel</a>
+                </div>
+            {% endif %}
+        </div>
+        
+        <a href="{% url 'dashboard' %}" class="back-link">Back to Dashboard</a>
+    </main>
+
+    {% if chart_data %}
+    <script>
+        const data = JSON.parse('{{ chart_data|escapejs }}');
+        
+        // Chart.js configuration
+        Chart.defaults.color = '#4CAF50';
+        Chart.defaults.borderColor = 'rgba(76, 175, 80, 0.1)';
+        
+        const chartConfig = {
+            pieChart: {
+                type: 'pie',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        data: data.totals,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.7)',    // Pink
+                            'rgba(54, 162, 235, 0.7)',    // Blue
+                            'rgba(255, 206, 86, 0.7)',    // Yellow
+                            'rgba(75, 192, 192, 0.7)',    // Teal
+                            'rgba(153, 102, 255, 0.7)',   // Purple
+                            'rgba(255, 159, 64, 0.7)'     // Orange
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: '#4CAF50'
+                            }
                         }
                     }
-                });
-
-                // Bar Chart
-                new Chart(barCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: data.labels,
-                        datasets: [{
-                            label: 'Total Amount',
-                            data: data.totals,
-                            backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true
+                }
+            },
+            barChart: {
+                type: 'bar',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Total Amount',
+                        data: data.totals,
+                        backgroundColor: 'rgba(33, 150, 243, 0.6)',
+                        borderColor: 'rgba(33, 150, 243, 0.6)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(76, 175, 80, 0.1)'
+                            },
+                            ticks: {
+                                color: '#4CAF50'
                             }
                         },
-                        plugins: {
-                            legend: {
-                                display: true,
+                        x: {
+                            grid: {
+                                color: 'rgba(76, 175, 80, 0.1)'
                             },
+                            ticks: {
+                                color: '#4CAF50'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#4CAF50'
+                            }
                         }
                     }
-                });
-            </script>
-        {% endif %}
-        
-        <div class="download-links">
-            <a href="{% url 'download_transactions_csv' %}?from_date={{ from_date }}&to_date={{ to_date }}&type={{ type }}">Download as CSV</a>
-            <a href="{% url 'download_transactions_excel' %}?from_date={{ from_date }}&to_date={{ to_date }}&type={{ type }}">Download as Excel</a>
-        </div>
-    </main>
+                }
+            }
+        };
+
+        new Chart(document.getElementById('transactionPieChart'), chartConfig.pieChart);
+        new Chart(document.getElementById('transactionBarChart'), chartConfig.barChart);
+    </script>
+    {% endif %}
 </body>
 </html>

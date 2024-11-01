@@ -4,16 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Savings Goal</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> 
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/add_savings_goals.css' %}">
 </head>
 <body>
-    <div class="container my-5">
-        <h2>Add a New Savings Goal</h2>
-        <form method="post">
+    <header>
+        <h1>Add a New Savings Goal</h1>
+    </header>
+
+    <main>
+        <form method="post" class="savings-goal-form">
             {% csrf_token %}
-            {% load bootstrap4 %} {% bootstrap_form form %} 
-            <button type="submit" class="btn btn-primary">Create Goal</button>
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <div class="error-message">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn-submit">Create Goal</button>
         </form>
-    </div>
+        
+        <a href="{% url 'savings_goals' %}" class="back-link">Back to Savings Goals</a>
+    </main>
 </body>
 </html>

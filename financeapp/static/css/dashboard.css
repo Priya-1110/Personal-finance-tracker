@@ -1,102 +1,204 @@
-/* General reset */
-body {
-    font-family: Arial, sans-serif;
+/* General Styles */
+* {
     margin: 0;
     padding: 0;
-    background-color: #f0f4f8; /* Soft background for contrast */
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Header */
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1a1a1a 0%, #1f2b1f 100%);
+    color: #4CAF50;
+    position: relative;
+}
+
+/* Header Styles */
 header {
-    background-color: #3b5998; /* Richer, professional blue */
-    color: #ffffff;
-    text-align: center;
+    background-color: rgba(26, 26, 26, 0.9);
     padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+header h1 {
+    color: #4CAF50;
+    font-size: 2rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Feedback Link */
+.feedback-link {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #4CAF50;
     font-size: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transition: all 0.3s ease;
+}
+
+.feedback-link:hover {
+    color: #45a049;
+    transform: translateY(-50%) scale(1.1);
+}
+
+/* Main Content */
+main {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 /* Card Container */
 .card-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 30px;
-    gap: 15px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem;
 }
 
-/* Card Style */
+/* Card Styles */
 .card {
-    background-color: #ffffff;
-    border: none;
-    border-radius: 12px;
-    width: 220px;
-    padding: 25px;
-    text-align: center;
+    background-color: rgba(26, 26, 26, 0.9);
+    border-radius: 15px;
+    padding: 1.5rem;
     cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Soft shadow */
+    transition: all 0.3s ease;
+    border: 2px solid #4CAF50;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .card:hover {
-    transform: translateY(-8px); /* Lift effect on hover */
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+    background-color: rgba(26, 26, 26, 0.95);
 }
 
-/* Card Text */
-.card h3 {
-    font-size: 1.2rem;
-    color: #333333;
-    margin: 0 0 10px;
+.card h2 {
+    color: #4CAF50;
+    margin-bottom: 0.8rem;
+    font-size: 1.4rem;
 }
 
 .card p {
-    color: #666666;
+    color: #45a049;
     font-size: 0.9rem;
-    margin: 0;
+    opacity: 0.9;
 }
 
 /* Add Transaction Button */
 .add-transaction {
     position: fixed;
-    bottom: 25px;
-    right: 25px;
-    background-color: #ff6b6b; /* Vivid coral color */
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #4CAF50;
     color: white;
     border: none;
-    border-radius: 50%;
-    width: 65px;
-    height: 65px;
-    font-size: 35px;
-    text-align: center;
-    line-height: 65px;
+    font-size: 2rem;
     cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for emphasis */
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .add-transaction:hover {
-    background-color: #ff4a4a;
-    transform: scale(1.1); /* Slightly enlarge on hover */
+    background-color: #45a049;
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
 }
 
-/* Mobile Responsiveness */
-@media (max-width: 600px) {
-    .card {
-        width: 90%; /* Full-width on smaller screens */
-        margin: 10px 0;
+/* Notifications */
+.notifications {
+    background-color: rgba(26, 26, 26, 0.9);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid #4CAF50;
+}
+
+.notifications ul {
+    list-style: none;
+}
+
+.notifications li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+.notifications li:last-child {
+    border-bottom: none;
+}
+
+.notifications a {
+    color: #4CAF50;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.notifications a:hover {
+    color: #45a049;
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    .card-container {
+        grid-template-columns: 1fr;
     }
 
     .add-transaction {
-        width: 55px;
-        height: 55px;
-        font-size: 28px;
-        line-height: 55px;
-        bottom: 15px;
-        right: 15px;
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+        bottom: 20px;
+        right: 20px;
     }
 }
-.feedback-link i { 
-    font-size: 2em; /* Adjust the size */
-    color: white;   /* Change the color */
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Focus Styles */
+button:focus, 
+a:focus {
+    outline: 2px solid #4CAF50;
+    outline-offset: 2px;
+}
+
+/* Hover Effects */
+.card:focus-within {
+    outline: 2px solid #4CAF50;
+    outline-offset: 2px;
 }

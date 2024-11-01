@@ -4,46 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Savings Goals</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/savings_goals.css' %}"> 
+    <link rel="stylesheet" href="{% static 'css/savings_goals.css' %}">
 </head>
 <body>
+    <header>
+        <h1>Your Savings Goals</h1>
+    </header>
 
-    <div class="container my-5">
-        <h2>Your Savings Goals</h2>
+    <main>
+        <div class="actions">
+            <a href="{% url 'add_savings_goal' %}" class="btn-add">Add New Goal</a>
+        </div>
 
-        <a href="{% url 'add_savings_goal' %}" class="btn btn-primary">Add New Goal</a>
-
-        <div class="row mt-4">
+        <div class="goals-grid">
             {% for goal in goals %}
-            <div class="col-md-4 mb-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ goal.name }}</h5>
-                        <p class="card-text">
-                            Target: ${{ goal.target_dollars|floatformat:2 }}<br> 
-                            Saved: ${{ goal.current_dollars|floatformat:2 }} 
-                        </p>
-
-                        <div class="progress">
-                            <div class="progress-bar" role="progressbar" 
-                                 style="width: {% widthratio goal.current_amount goal.target_amount 100 %}%"
-                                 aria-valuenow="{{ goal.current_amount }}" 
-                                 aria-valuemin="0" 
-                                 aria-valuemax="{{ goal.target_amount }}">
-                                {% widthratio goal.current_amount goal.target_amount 100 %}% 
-                            </div>
-                        </div>
-
-                        <a href="{% url 'log_savings' goal.id %}" class="btn btn-sm btn-success mt-2">Log Savings</a>
+            <div class="goal-card">
+                <h2 class="goal-title">{{ goal.name }}</h2>
+                <div class="goal-details">
+                    <div class="goal-amount">
+                        <p>Target: <span>${{ goal.target_dollars|floatformat:2 }}</span></p>
+                        <p>Saved: <span>${{ goal.current_dollars|floatformat:2 }}</span></p>
                     </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-bar" 
+                             style="width: {% widthratio goal.current_amount goal.target_amount 100 %}%">
+                            <span class="progress-text">
+                                {% widthratio goal.current_amount goal.target_amount 100 %}%
+                            </span>
+                        </div>
+                    </div>
+
+                    <a href="{% url 'log_savings' goal.id %}" class="btn-log">Log Savings</a>
                 </div>
             </div>
             {% endfor %}
         </div>
-
-    </div>
-
+        
+        <a href="{% url 'dashboard' %}" class="back-link">Back to Dashboard</a>
+    </main>
 </body>
 </html>

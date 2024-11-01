@@ -32,36 +32,33 @@ header h1 {
 main {
     flex: 1;
     padding: 2rem;
-    max-width: 1200px;
+    max-width: 600px;
     margin: 0 auto;
     width: 100%;
     animation: fadeIn 0.5s ease-out;
 }
 
-h2 {
-    color: #4CAF50;
-    margin-bottom: 1.5rem;
-    font-size: 1.5rem;
-}
-
 /* Form Styles */
-.budget-form form {
+.savings-goal-form {
     background-color: rgba(26, 26, 26, 0.9);
     padding: 1.5rem;
     border-radius: 15px;
     margin-bottom: 2rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    align-items: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
-.budget-form form label {
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
     color: #4CAF50;
-    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
-.budget-form form input {
+input, select, textarea {
+    width: 100%;
     padding: 0.5rem;
     border: 1px solid #4CAF50;
     border-radius: 5px;
@@ -69,7 +66,20 @@ h2 {
     color: #4CAF50;
 }
 
-.budget-form form button {
+.form-text {
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.error-message {
+    color: #F44336;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* Button Styles */
+.btn-submit {
     padding: 0.5rem 1rem;
     background-color: #4CAF50;
     color: white;
@@ -79,39 +89,12 @@ h2 {
     transition: background-color 0.3s ease;
 }
 
-.budget-form form button:hover {
+.btn-submit:hover {
     background-color: #45a049;
 }
 
-/* Table Styles */
-.budget-overview table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: rgba(26, 26, 26, 0.9);
-    border-radius: 15px;
-    overflow: hidden;
-}
-
-.budget-overview th, .budget-overview td {
-    padding: 1rem;
-    text-align: left;
-    border-bottom: 1px solid rgba(76, 175, 80, 0.2);
-}
-
-.budget-overview tr:last-child td {
-    border-bottom: none;
-}
-
-.budget-difference.positive {
-    color: #4CAF50;
-}
-
-.budget-difference.negative {
-    color: #F44336;
-}
-
-/* Back to Dashboard Link */
-a[href*="dashboard"] {
+/* Back Link */
+.back-link {
     display: inline-block;
     margin-top: 1rem;
     color: #4CAF50;
@@ -119,7 +102,7 @@ a[href*="dashboard"] {
     transition: color 0.3s ease;
 }
 
-a[href*="dashboard"]:hover {
+.back-link:hover {
     color: #45a049;
     text-decoration: underline;
 }
@@ -128,23 +111,6 @@ a[href*="dashboard"]:hover {
 @media screen and (max-width: 768px) {
     main {
         padding: 1rem;
-    }
-
-    .budget-overview table {
-        font-size: 0.9rem;
-    }
-
-    .budget-overview th, .budget-overview td {
-        padding: 0.5rem;
-    }
-
-    .budget-form form {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .budget-form form input, .budget-form form button {
-        width: 100%;
     }
 }
 
@@ -163,9 +129,11 @@ a[href*="dashboard"]:hover {
 }
 
 /* Focus Styles */
-button:focus, 
 input:focus,
-a:focus {
+select:focus,
+textarea:focus,
+.btn-submit:focus,
+.back-link:focus {
     outline: 2px solid #4CAF50;
     outline-offset: 2px;
 }

@@ -14,28 +14,39 @@
     </header>
 
     <main>
-        <div class="notifications"> 
-            {% if unread_notifications %}
-                <h3>You have unread notifications:</h3>
-                <ul>
-                    {% for notification in unread_notifications %}
-                    <li>
-                        {% if notification.link %}
-                            <a href="{% url 'mark_notification_as_read' notification.id %}"> 
-                                <i class="fas fa-envelope-open-text"></i> {{ notification.message }}  </a>
-                        {% else %}
-                            <i class="fas fa-exclamation-circle"></i> {{ notification.message }}
-                        {% endif %}
-                        
-                    </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>You have no unread notifications.</p> 
-            {% endif %}
+        <div class="notifications-container">
+            <div class="notifications-card">
+                {% if unread_notifications %}
+                    <h3><i class="fas fa-bell"></i> Unread Notifications</h3>
+                    <ul class="notifications-list">
+                        {% for notification in unread_notifications %}
+                        <li class="notification-item">
+                            {% if notification.link %}
+                                <a href="{% url 'mark_notification_as_read' notification.id %}" class="notification-link"> 
+                                    <i class="fas fa-envelope-open-text"></i>
+                                    <span class="notification-message">{{ notification.message }}</span>
+                                    <i class="fas fa-chevron-right arrow-icon"></i>
+                                </a>
+                            {% else %}
+                                <div class="notification-content">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span class="notification-message">{{ notification.message }}</span>
+                                </div>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="no-notifications">
+                        <i class="fas fa-check-circle"></i>
+                        <p>You have no unread notifications</p>
+                    </div>
+                {% endif %}
+            </div>
         </div>
-        <a href="{% url 'dashboard' %}">Back to Dashboard</a>
-
+        <a href="{% url 'dashboard' %}" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
     </main>
 </body>
 </html>

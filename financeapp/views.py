@@ -11,6 +11,7 @@ from django.contrib import messages
 from django.views.decorators.http import require_POST
 from django.http import HttpResponse
 from django.db.models import Sum
+from django.db import transaction
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
@@ -27,7 +28,7 @@ def home(request):
 
 def register(request):
     """
-    Allows the user to register with their mail id
+    Allows the user to register with their email id
     """
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
@@ -41,7 +42,9 @@ def register(request):
                 # If email is new, create the user
                 user = form.save()
                 login(request, user)  # Automatically log the user in
+                messages.success(request, f'Account created for {email}. You are now logged in.')
                 return redirect('dashboard')
+    else:
         form = UserRegisterForm()
 
     return render(request, 'registration/register.html', {'form': form})
@@ -87,16 +90,16 @@ def view_budget(request):
     if request.method == 'POST':
         form = BudgetForm(request.POST, instance=budget)
         if form.is_valid():
-            with transaction.atomic():
+            with transaction.atomic(): # pylint: disable=undefined-variable
                 form.save()
 
                 # *** Send Notification Only if Budget Changes ***
                 if form.has_changed():
                     # Delete existing budget notifications for the user
                     Notification.objects.filter( # pylint: disable=no-member
-                    user=request.user, 
+                    user=request.user,
                     link=reverse('view_budget')
-                    ).delete() 
+                    ).delete()
 
                     # Create a new notification
                     create_notification(
@@ -110,7 +113,6 @@ def view_budget(request):
             return redirect('view_budget')
     else:
         form = BudgetForm(instance=budget)
-        
     if total_expenses > budget.total_amount:
         # Delete existing budget notifications for the user
         Notification.objects.filter(user=request.user, link=reverse('view_budget')).delete() # pylint: disable=no-member
@@ -424,7 +426,6 @@ def alerts(request):
         'unread_notifications': unread_notifications,
     }
     return render(request, 'alerts.html', context)
-   
 @login_required
 def mark_notification_as_read(request, notification_id):
     """Marks a notification as read."""
@@ -432,4 +433,3 @@ def mark_notification_as_read(request, notification_id):
     notification.is_read = True
     notification.save()
     return redirect('alerts')  # Redirect back to the alerts page
-

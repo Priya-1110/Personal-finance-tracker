@@ -26,5 +26,8 @@ urlpatterns = [
     path('alerts/', views.alerts, name='alerts'),
     path('contact/', views.contact_view, name='contact'),
     path('logout/', views.logout, name='logout'),
-    path('alerts/mark-as-read/<int:notification_id>/', views.mark_notification_as_read, name='mark_notification_as_read'),
+    path(
+        'alerts/mark-as-read/<int:notification_id>/',
+        views.mark_notification_as_read,
+        name='mark_notification_as_read'),
 ]

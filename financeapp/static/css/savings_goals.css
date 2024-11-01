@@ -1,89 +1,169 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 body {
-    font-family: 'Poppins', sans-serif; /* A more stylish font */
-    background-color: #f4f4f4; /* Light neutral background */
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1a1a1a 0%, #1f2b1f 100%);
+    color: #4CAF50;
+    display: flex;
+    flex-direction: column;
 }
 
-.container {
-    max-width: 960px;
-    padding: 50px 0;
-}
-
-h2 {
-    color: #2c3e50; /* Dark blue-gray heading */
-    font-weight: 600;
-    margin-bottom: 30px;
+/* Header Styles */
+header {
+    background-color: rgba(26, 26, 26, 0.9);
+    padding: 1.5rem;
     text-align: center;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
 }
 
-.btn-primary {
-    background-color: #3498db; /* Vivid blue button */
-    border-color: #3498db;
-    border-radius: 25px; /* Rounded button corners */
-    transition: all 0.3s ease;
+header h1 {
+    color: #4CAF50;
+    font-size: 2rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.btn-primary:hover {
-    background-color: #2980b9;
-    border-color: #2980b9;
-    box-shadow: 0px 5px 10px rgba(52, 152, 219, 0.5); /* Button shadow on hover */
-}
-
-.card {
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
-    transition: transform 0.3s ease;
-    background-color: #fff; /* White card background */
-    overflow: hidden; /* For the gradient effect below */
-    position: relative; /* For positioning the progress bar */
-}
-
-.card:hover {
-    transform: translateY(-5px); 
-}
-
-.card-body {
-    padding: 30px;
-    position: relative; /* For positioning elements within the card */
-    z-index: 2; /* Ensure content appears above the gradient */
-}
-
-.card-title {
-    font-weight: 600;
-    color: #2c3e50;
-}
-
-.card-text {
-    margin-bottom: 1.5rem;
-    color: #6c757d; 
-}
-
-/* Progress Bar Styling */
-.progress {
-    height: 12px; /* Thinner progress bar */
-    background-color: transparent; /* Hide the default background */
-    border-radius: 10px;
-    overflow: hidden;
-    position: absolute; /* Position at the bottom of the card */
-    bottom: 0;
-    left: 0;
+/* Main Content */
+main {
+    flex: 1;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
     width: 100%;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.actions {
+    margin-bottom: 2rem;
+}
+
+/* Button Styles */
+.btn-add, .btn-log {
+    padding: 0.5rem 1rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-add:hover, .btn-log:hover {
+    background-color: #45a049;
+    text-decoration: none;
+    color: white;
+}
+
+/* Goals Grid */
+.goals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Goal Card */
+.goal-card {
+    background-color: rgba(26, 26, 26, 0.9);
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.goal-title {
+    color: #4CAF50;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.goal-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.goal-amount p {
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.goal-amount span {
+    font-weight: bold;
+}
+
+/* Progress Bar */
+.progress-container {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    overflow: hidden;
+    height: 20px;
 }
 
 .progress-bar {
-    background-image: linear-gradient(to right, #f39c12, #e74c3c); /* More vibrant gradient */
-    transition: width 0.6s ease-in-out; 
-    height: 100%; 
+    background-color: #4CAF50;
+    height: 100%;
+    transition: width 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* Add a subtle gradient to the card on hover */
-.card:hover::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to bottom right, rgba(243, 156, 18, 0.1), rgba(231, 76, 60, 0.1)); 
-    z-index: 1; /* Place the gradient behind the content */
+.progress-text {
+    color: white;
+    font-size: 0.8rem;
+}
+
+/* Back Link */
+.back-link {
+    display: inline-block;
+    margin-top: 1rem;
+    color: #4CAF50;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.back-link:hover {
+    color: #45a049;
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    main {
+        padding: 1rem;
+    }
+
+    .goals-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Focus Styles */
+.btn-add:focus,
+.btn-log:focus,
+.back-link:focus {
+    outline: 2px solid #4CAF50;
+    outline-offset: 2px;
 }

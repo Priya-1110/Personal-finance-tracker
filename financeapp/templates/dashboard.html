@@ -10,7 +10,7 @@
 </head>
 <body>
     <header>
-        <h1>Your Personal Finance Tracker</h1>
+        <h1>Dashboard - Personal Finance Tracker</h1>
             <a href="{% url 'contact' %}" class="feedback-link"> 
         <i class="fas fa-phone"></i> 
         
@@ -18,7 +18,7 @@
     </header>
     
     <main>
-                <div class="notifications"> 
+            <div class="notifications"> 
             {% if unread_notifications %}
             <ul>
                 {% for notification in unread_notifications %}
