@@ -10,7 +10,7 @@
 </head>
 <body>
     <div class="page-container">
-        <h1>Upload Image</h1>
+        <h1>Upload or Capture Image</h1>
         
         <!-- Display success messages -->
         {% if messages %}
@@ -29,11 +29,57 @@
                 {{ form.as_p }}
                 <button type="submit">Upload</button>
             </form>
-                        <a href="{% url 'dashboard' %}" class="back-link">
-            <i class="fas fa-arrow-left"></i> Back to Dashboard
-        </a>
+
+            <!-- Capture from Camera Section -->
+            <h2>Capture from Camera</h2>
+            <div class="camera-container">
+                <video id="camera" autoplay></video>
+                <button id="capture-btn">Capture</button>
+                <canvas id="canvas" style="display: none;"></canvas>
+            </div>
+
+            <form id="capture-form" method="post" enctype="multipart/form-data" style="display: none;">
+                {% csrf_token %}
+                <input type="file" name="image" id="captured-image">
+                <button type="submit">Upload Captured Image</button>
+            </form>
+
+            <a href="{% url 'dashboard' %}" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
         </div>
     </div>
 
+    <script>
+        // Access the camera and capture the image
+        const video = document.getElementById('camera');
+        const captureBtn = document.getElementById('capture-btn');
+        const canvas = document.getElementById('canvas');
+        const capturedImageInput = document.getElementById('captured-image');
+        const captureForm = document.getElementById('capture-form');
+
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(error => {
+                console.error('Error accessing camera:', error);
+            });
+
+        captureBtn.addEventListener('click', () => {
+            const context = canvas.getContext('2d');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            canvas.toBlob(blob => {
+                const file = new File([blob], "captured_image.png", { type: "image/png" });
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                capturedImageInput.files = dataTransfer.files;
+                captureForm.style.display = "block";
+            });
+        });
+    </script>
 </body>
 </html>

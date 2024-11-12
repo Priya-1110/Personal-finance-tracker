@@ -124,6 +124,30 @@ h2 {
     color: #F44336;
 }
 
+.budget-goals {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+}
+
+.budget-goals table {
+    width: 100%;
+}
+
+.budget-goals td {
+    padding: 8px;
+}
+
+.budget-goals .positive {
+    color: green;
+}
+
+.budget-goals .negative {
+    color: red;
+}
+
+
 /* Back to Dashboard Link */
 a[href*="dashboard"] {
     display: inline-block;

@@ -24,6 +24,8 @@ from django.http import JsonResponse
 import base64
 import os
 from .models import UserImage
+from django.utils import timezone
+from datetime import timedelta
 
 
 def home(request):
@@ -78,6 +80,7 @@ def dashboard(request):
     Displays the main page after logging in
     """
     return render(request, 'dashboard.html')
+    
 
 @login_required
 def view_budget(request):
@@ -472,22 +475,7 @@ def mark_notification_as_read(request, notification_id):
 
 
 
-# def camera_view(request):
-#     return render(request, 'index.html')
 
-# def upload_image(request):
-#     if request.method == 'POST':
-#         data = json.loads(request.body)
-#         image_data = data['image'].split(',')[1]  # Get the base64 part
-#         image_data = base64.b64decode(image_data)
-
-#         # Save the image
-#         file_path = os.path.join('media', 'captured_image.png')
-#         with open(file_path, 'wb') as f:
-#             f.write(image_data)
-
-#         return JsonResponse({'message': 'Image uploaded successfully!'})
-#     return JsonResponse({'error': 'Invalid request'}, status=400)
     
 def upload_image(request):
     if request.method == 'POST':
