@@ -1,0 +1,152 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #1a1a1a 0%, #1f2b1f 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #4CAF50;
+}
+
+.gallery-container {
+    width: 90%;
+    max-width: 900px;
+    text-align: center;
+    padding: 2rem;
+    background-color: rgba(26, 26, 26, 0.95);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #4CAF50;
+}
+
+.user-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+}
+
+.image-card {
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    width: 250px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.image-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(76, 175, 80, 0.4);
+}
+
+.image-wrapper {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.image-wrapper img {
+    width: 100%;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+.image-wrapper img:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+/* Image Actions */
+.image-actions {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-around;
+    gap: 8px;
+}
+
+/* Action Button Styles */
+.image-actions button {
+    background: linear-gradient(45deg, transparent 50%, #45a049 50%);
+    background-size: 200% 100%;
+    background-position: right bottom;
+    color: #4CAF50;
+    padding: 8px 12px;
+    border: 2px solid #4CAF50;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.4s ease;
+}
+
+.image-actions button:hover {
+    background-position: left bottom;
+    color: #ffffff;
+    border-color: #45a049;
+}
+
+/* Zoom Button Styling */
+.zoom-btn {
+    background: #4CAF50;
+    border: none;
+    color: #ffffff;
+}
+
+.zoom-btn:hover {
+    background: #45a049;
+}
+
+/* Delete Button Styling */
+.delete-btn {
+    background-color: #e53935;
+    border: none;
+    color: #ffffff;
+}
+
+.delete-btn:hover {
+    background-color: #c62828;
+}
+
+.delete-btn:focus {
+    outline: 2px solid #ff5252;
+}
+
+.back-link {
+    display: block;
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #4CAF50;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.back-link:hover {
+    color: #388E3C;
+}
+.messages {
+    margin-bottom: 1.5rem;
+}
+
+.alert-success {
+    color: #4CAF50;
+    background-color: rgba(76, 175, 80, 0.1);
+    border: 1px solid #4CAF50;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    text-align: center;
+}

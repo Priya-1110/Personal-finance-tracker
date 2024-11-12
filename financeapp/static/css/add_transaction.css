@@ -96,16 +96,15 @@ input::placeholder {
     display: block;
     text-align: center;
     margin-top: 1.5rem;
-    color:  #4CAF50;
+    color: #4CAF50;
     text-decoration: none;
     font-weight: bold;
     transition: all 0.3s ease;
 }
 
 .back-link:hover {
-    color: #1976D2;
+    color: #388E3C;
 }
-
 /* Icon Styling */
 .fas {
     font-size: 1.1rem;

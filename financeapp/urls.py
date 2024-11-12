@@ -2,6 +2,8 @@
 
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -30,4 +32,13 @@ urlpatterns = [
         'alerts/mark-as-read/<int:notification_id>/',
         views.mark_notification_as_read,
         name='mark_notification_as_read'),
+    # path('camera/', views.camera_view, name='camera'),
+    # path('upload/', views.upload_image, name='upload_image'),
+    path('upload/', views.upload_image, name='upload_image'),
+    path('gallery/', views.image_gallery, name='image_gallery'),
+    path('delete-image/<int:image_id>/', views.delete_image, name='delete_image'),
+
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

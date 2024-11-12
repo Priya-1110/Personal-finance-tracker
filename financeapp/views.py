@@ -18,6 +18,12 @@ from django.core.mail import send_mail
 from django.conf import settings
 from .forms import UserRegisterForm,BudgetForm,ContactForm,SavingsGoalForm,SavingsTransactionForm
 from .models import Transaction,Budget,Notification,SavingsGoal
+from .forms import UserImageForm
+from django.shortcuts import render
+from django.http import JsonResponse
+import base64
+import os
+from .models import UserImage
 
 
 def home(request):
@@ -463,3 +469,52 @@ def mark_notification_as_read(request, notification_id):
     notification.is_read = True
     notification.save()
     return redirect('alerts')  # Redirect back to the alerts page
+
+
+
+# def camera_view(request):
+#     return render(request, 'index.html')
+
+# def upload_image(request):
+#     if request.method == 'POST':
+#         data = json.loads(request.body)
+#         image_data = data['image'].split(',')[1]  # Get the base64 part
+#         image_data = base64.b64decode(image_data)
+
+#         # Save the image
+#         file_path = os.path.join('media', 'captured_image.png')
+#         with open(file_path, 'wb') as f:
+#             f.write(image_data)
+
+#         return JsonResponse({'message': 'Image uploaded successfully!'})
+#     return JsonResponse({'error': 'Invalid request'}, status=400)
+    
+def upload_image(request):
+    if request.method == 'POST':
+        form = UserImageForm(request.POST, request.FILES)
+        if form.is_valid():
+            user_image = form.save(commit=False)
+            user_image.user = request.user
+            user_image.save()
+            messages.success(request, 'Receipt has been uploaded successfully!')
+            form = UserImageForm()  # Clear the form after successful upload
+    else:
+        form = UserImageForm()
+    
+    return render(request, 'upload_image.html', {'form': form})
+    
+def image_gallery(request):
+    user_images = UserImage.objects.filter(user=request.user)
+    return render(request, 'image_gallery.html', {'user_images': user_images})
+    
+@login_required
+def delete_image(request, image_id):
+    image = get_object_or_404(UserImage, id=image_id, user=request.user)
+    user_images = UserImage.objects.filter(user=request.user)
+    if request.method == 'POST':
+        image.delete()
+        messages.success(request, 'Image deleted successfully.')
+        return render(request, 'image_gallery.html', {'user_images': user_images})
+
+    messages.error(request, 'Invalid request.')
+    return redirect('dashboard')

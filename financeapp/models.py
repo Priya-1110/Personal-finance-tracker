@@ -79,3 +79,8 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"Notification for {self.user}: {self.message}" # Corrected to access user directly
+        
+class UserImage(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='media/user_images/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)

@@ -141,3 +141,8 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')  # Your email address
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')    # Your email password
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER 
+
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

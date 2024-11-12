@@ -28,20 +28,27 @@ header h1 {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* Feedback Link */
-.feedback-link {
+/* Feedback and Camera Links */
+.header-icons {
+    display: flex;
+    justify-content: flex-end; /* Aligns icons to the right */
+    align-items: center; /* Centers icons vertically */
     position: absolute;
     right: 20px;
     top: 50%;
     transform: translateY(-50%);
+}
+
+.header-icons a {
     color: #4CAF50;
     font-size: 1.5rem;
+    margin-left: 15px; /* Space between icons */
     transition: all 0.3s ease;
 }
 
-.feedback-link:hover {
+.header-icons a:hover {
     color: #45a049;
-    transform: translateY(-50%) scale(1.1);
+    transform: scale(1.1);
 }
 
 /* Main Content */
@@ -125,80 +132,4 @@ main {
 
 .notifications ul {
     list-style: none;
-}
-
-.notifications li {
-    padding: 0.5rem 0;
-    border-bottom: 1px solid rgba(76, 175, 80, 0.2);
-}
-
-.notifications li:last-child {
-    border-bottom: none;
-}
-
-.notifications a {
-    color: #4CAF50;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.notifications a:hover {
-    color: #45a049;
-    text-decoration: underline;
-}
-
-/* Responsive Design */
-@media screen and (max-width: 768px) {
-    header h1 {
-        font-size: 1.5rem;
-    }
-
-    .card-container {
-        grid-template-columns: 1fr;
-    }
-
-    .add-transaction {
-        width: 50px;
-        height: 50px;
-        font-size: 1.5rem;
-        bottom: 20px;
-        right: 20px;
-    }
-}
-
-/* Animations */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.card {
-    animation: fadeIn 0.5s ease-out;
-}
-
-/* Accessibility */
-@media (prefers-reduced-motion: reduce) {
-    * {
-        animation: none !important;
-        transition: none !important;
-    }
-}
-
-/* Focus Styles */
-button:focus, 
-a:focus {
-    outline: 2px solid #4CAF50;
-    outline-offset: 2px;
-}
-
-/* Hover Effects */
-.card:focus-within {
-    outline: 2px solid #4CAF50;
-    outline-offset: 2px;
 }

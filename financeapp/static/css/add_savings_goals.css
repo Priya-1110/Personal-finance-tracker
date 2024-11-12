@@ -29,6 +29,7 @@ header h1 {
 }
 
 /* Main Content */
+
 main {
     flex: 1;
     padding: 2rem;
@@ -95,16 +96,17 @@ input, select, textarea {
 
 /* Back Link */
 .back-link {
-    display: inline-block;
-    margin-top: 1rem;
+    display: block;
+    text-align: center;
+    margin-top: 1.5rem;
     color: #4CAF50;
     text-decoration: none;
-    transition: color 0.3s ease;
+    font-weight: bold;
+    transition: all 0.3s ease;
 }
 
 .back-link:hover {
-    color: #45a049;
-    text-decoration: underline;
+    color: #388E3C;
 }
 
 /* Responsive Design */

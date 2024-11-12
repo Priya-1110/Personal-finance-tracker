@@ -44,6 +44,20 @@ h2 {
     font-size: 1.5rem;
 }
 
+.back-link {
+    display: block;
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #4CAF50;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.back-link:hover {
+    color: #388E3C;
+}
+
 /* Form Styles */
 .budget-form form {
     background-color: rgba(26, 26, 26, 0.9);

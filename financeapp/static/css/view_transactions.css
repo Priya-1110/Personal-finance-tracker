@@ -82,6 +82,20 @@ form button:hover {
     background-color: #45a049;
 }
 
+.back-link {
+    display: block;
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #4CAF50;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.back-link:hover {
+    color: #388E3C;
+}
+
 /* Table Styles */
 table {
     width: 100%;

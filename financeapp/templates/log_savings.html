@@ -6,6 +6,7 @@
     <title>Log Savings</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/log_savings.css' %}">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <header>
@@ -31,7 +32,9 @@
             <button type="submit" class="btn-submit">Log Savings</button>
         </form>
         
-        <a href="{% url 'savings_goals' %}" class="back-link">Back to Savings Goals</a>
+        <a href="{% url 'savings_goals' %}" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Savings Goals
+        </a>
     </main>
 </body>
 </html>

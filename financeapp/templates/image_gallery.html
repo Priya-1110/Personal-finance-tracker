@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receipts & Bills</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/image_gallery.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+        <!-- Display success messages -->
+       
+<div class="gallery-container">
+    <h1>Receipts & Bills</h1>
+     {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-success">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    
+    <div class="user-images">
+        {% for image in user_images %}
+            <div class="image-card">
+                <div class="image-wrapper">
+                    <img src="{{ image.image.url }}" alt="User Image">
+                  </div>
+                    <div class="image-actions">
+                        <button onclick="zoomIn(this)" title="Zoom In">
+    <i class="fas fa-search-plus"></i>
+</button>
+<button onclick="zoomOut(this)" title="Zoom Out">
+    <i class="fas fa-search-minus"></i>
+</button>
+<form method="post" action="{% url 'delete_image' image.id %}">
+    {% csrf_token %}
+    <button type="submit" class="delete-btn" title="Delete">
+        <i class="fas fa-trash-alt"></i>
+    </button>
+</form>
+
+                    </div>
+                </div>
+            {% empty %}
+                <p>No receipts vailable.</p>
+            {% endfor %}
+        </div>
+            </script>
+            <a href="{% url 'dashboard' %}" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+</body>
+    </div>
+    <script>
+        function zoomIn(button) {
+            const img = button.closest('.image-card').querySelector('img');
+            img.style.transform = 'scale(1.2)';
+        }
+
+        function zoomOut(button) {
+            const img = button.closest('.image-card').querySelector('img');
+            img.style.transform = 'scale(1)';
+        }
+    </script>
+
+</body>
+</html> 
