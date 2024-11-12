@@ -168,13 +168,14 @@ def add_savings_goal(request):
     else:
         form = SavingsGoalForm()
     return render(request, 'add_savings_goal.html', {'form': form})
-
+    
 @login_required
 def log_savings(request, goal_id):
     """
     Allows the user to log their savings for a particular goal
     """
     goal = get_object_or_404(SavingsGoal, pk=goal_id, user=request.user)
+    
     if request.method == 'POST':
         form = SavingsTransactionForm(request.POST)
         if form.is_valid():
@@ -186,10 +187,39 @@ def log_savings(request, goal_id):
             goal.current_amount += transaction.amount
             goal.save()
 
+            # Check if the goal has reached 100%
+            if goal.current_amount >= goal.target_amount:
+                message = f"Congratulations! You've reached your savings goal of ${goal.target_amount:.2f}."
+                create_notification(request.user, message, link=f"/goals/{goal.id}/")
+
             return redirect('savings_goals')
     else:
         form = SavingsTransactionForm()
+
     return render(request, 'log_savings.html', {'form': form, 'goal': goal})
+    
+
+# @login_required
+# def log_savings(request, goal_id):
+#     """
+#     Allows the user to log their savings for a particular goal
+#     """
+#     goal = get_object_or_404(SavingsGoal, pk=goal_id, user=request.user)
+#     if request.method == 'POST':
+#         form = SavingsTransactionForm(request.POST)
+#         if form.is_valid():
+#             transaction = form.save(commit=False)
+#             transaction.goal = goal
+#             transaction.save()
+
+#             # Update goal's current amount
+#             goal.current_amount += transaction.amount
+#             goal.save()
+
+#             return redirect('savings_goals')
+#     else:
+#         form = SavingsTransactionForm()
+#     return render(request, 'log_savings.html', {'form': form, 'goal': goal})
 
 
 @login_required
