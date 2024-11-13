@@ -302,16 +302,15 @@ def edit_transaction(request, transaction_id):
     # Handle other request methods (e.g., GET to display the form)
     return HttpResponse("Invalid request method")  # Or similar
 
-# View for deleting a transaction
 @require_POST
-def delete_transaction(transaction_id):
+def delete_transaction(request, transaction_id):
     """
-    Permits the user to delete the transactions
+    Permits the user to delete the transaction.
     """
-    transaction = Transaction.objects.get(id=transaction_id) # pylint: disable=no-member
+    transaction = get_object_or_404(Transaction, id=transaction_id)  # Fetch transaction or return 404
     transaction.delete()
     return redirect('view_transactions')  # Redirect to the view transactions page
-
+    
 @login_required
 def logout(request):
     """
