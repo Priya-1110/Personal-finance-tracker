@@ -16,7 +16,7 @@ phases:
       # Run pylint on the root directory and subdirectories
       - pylint $CODEBUILD_SRC_DIR/*.py
       - pylint $CODEBUILD_SRC_DIR/adminproject/*.py
-      - pylint $CODEBUILD_SRC_DIR/adminproject/financeapp/*.py
+      - pylint $CODEBUILD_SRC_DIR/financeapp/*.py
       
 
 artifacts:
