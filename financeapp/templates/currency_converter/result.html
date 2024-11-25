@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Conversion Result</title>
+     {% load static %}
+    <link rel="stylesheet" href="{% static 'css/contact.css' %}">
+</head>
+<body>
+    <h1>Currency Conversion Result</h1>
+    <p>{{ amount }} {{ base }} = {{ converted_amount|floatformat:2 }} {{ target }}</p>
+    <p>Exchange Rate: 1 {{ base }} = {{ rate|floatformat:2 }} {{ target }}</p>
+    <a href="{% url 'currency_converter' %}">Convert Another</a>
+</body>
+</html>

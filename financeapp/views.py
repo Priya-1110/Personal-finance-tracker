@@ -3,6 +3,7 @@ This module contains the views for the finance app.
 """
 import json
 import pandas as pd
+import requests
 from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate, logout as auth_logout
@@ -505,3 +506,39 @@ def delete_image(request, image_id):
 
     messages.error(request, 'Invalid request.')
     return redirect('dashboard')
+    
+
+API_URL = "https://api.exchangerate.host/convert"
+API_KEY = "68d3237580165ad3c12880c9f14e4ec0"  # Directly hardcoding the API key
+
+def currency_converter(request):
+    if request.method == "POST":
+        base = request.POST.get("base")  # Base currency
+        target = request.POST.get("target")  # Target currency
+        amount = float(request.POST.get("amount", 0))  # Amount to convert
+
+        # Perform the API request with base, target currencies and amount
+        response = requests.get(API_URL, params={
+            "access_key": API_KEY,
+            "from": base,
+            "to": target,
+            "amount": amount
+        })
+
+        if response.status_code == 200:
+            data = response.json()
+            if 'result' in data:
+                converted_amount = data['result']
+                context = {
+                    "converted_amount": converted_amount,
+                    "base": base,
+                    "target": target,
+                    "amount": amount,
+                }
+                return render(request, "currency_converter/result.html", context)
+            else:
+                return render(request, "currency_converter/index.html", {"error": "Conversion failed, invalid response."})
+        else:
+            return render(request, "currency_converter/index.html", {"error": "Failed to fetch currency rates"})
+
+    return render(request, "currency_converter/index.html")
