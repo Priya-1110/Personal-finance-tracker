@@ -1,0 +1,201 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1a1a1a 0%, #1f2b1f 100%);
+}
+
+/* Page Container */
+.page-container {
+    background-color: rgba(26, 26, 26, 0.95);
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    text-align: center;
+}
+
+/* Header */
+h1 {
+    color: #4CAF50;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+h2 {
+    color: #4CAF50;
+    font-size: 1.5rem;
+    margin-top: 2rem;
+}
+
+.back-link {
+    display: block;
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #4CAF50;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.back-link:hover {
+    color: #388E3C;
+}
+
+/* Messages */
+.messages {
+    margin-bottom: 1.5rem;
+}
+
+.alert-success {
+    color: #4CAF50;
+    background-color: rgba(76, 175, 80, 0.1);
+    border: 1px solid #4CAF50;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+/* Form Container */
+.form-container {
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Form Styles */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+}
+
+form label {
+    color: #4CAF50;
+    font-size: 0.95rem;
+    text-align: left;
+    width: 100%;
+}
+
+form input[type="text"],
+form input[type="file"],
+form input[type="email"],
+form input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #4CAF50;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #4CAF50;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+form input:focus {
+    outline: none;
+    border-color: #45a049;
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Submit Button */
+button[type="submit"] {
+    background: linear-gradient(45deg, transparent 50%, #45a049 50%);
+    background-size: 250% 100%;
+    background-position: right bottom;
+    color: #4CAF50;
+    padding: 12px;
+    border: 2px solid #4CAF50;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: all 0.4s ease;
+    width: 100%;
+}
+
+button[type="submit"]:hover {
+    background-position: left bottom;
+    color: #ffffff;
+    border-color: #45a049;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+}
+
+/* Accessibility: Focus Outline for Input Fields and Buttons */
+input:focus,
+button[type="submit"]:focus {
+    outline: 2px solid #4CAF50;
+    outline-offset: 3px;
+}
+
+/* Camera Section */
+.camera-container {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+#camera {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+#capture-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    margin-top: 1rem;
+}
+
+#capture-btn:hover {
+    background-color: #45a049;
+}
+
+/* Form for Captured Image */
+#capture-form {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#captured-image {
+    display: none;
+}
+
+/* Custom Scrollbar for Webkit Browsers */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #4CAF50;
+    border-radius: 10px;
+}
