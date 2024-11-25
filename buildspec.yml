@@ -15,7 +15,7 @@ phases:
       - python --version
       # Run pylint on the root directory and subdirectories
       - pylint $CODEBUILD_SRC_DIR/*.py
-      - pylint $CODEBUILD_SRC_DIR/adminproject*.py
+      
 
 artifacts:
   files:
