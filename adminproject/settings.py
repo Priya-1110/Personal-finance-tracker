@@ -28,11 +28,11 @@ SECRET_KEY = config('DJANGO_SECRET_KEY')
 DEBUG = True
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://95ca21b6ef464eeaa702370ba4ba2a63.vfs.cloud9.eu-west-1.amazonaws.com','http://x23273518-nov25-1-env.eba-ypgnrmc9.eu-west-1.elasticbeanstalk.com'
+    'https://95ca21b6ef464eeaa702370ba4ba2a63.vfs.cloud9.eu-west-1.amazonaws.com','http://x23273518-nov25-1-env.eba-ypgnrmc9.eu-west-1.elasticbeanstalk.com','http://172.31.36.213','http://172.31.36.213'
 ]
 
 
-ALLOWED_HOSTS = ['95ca21b6ef464eeaa702370ba4ba2a63.vfs.cloud9.eu-west-1.amazonaws.com','x23273518-nov25-1-env.eba-ypgnrmc9.eu-west-1.elasticbeanstalk.com']
+ALLOWED_HOSTS = ['95ca21b6ef464eeaa702370ba4ba2a63.vfs.cloud9.eu-west-1.amazonaws.com','x23273518-nov25-1-env.eba-ypgnrmc9.eu-west-1.elasticbeanstalk.com','172.31.36.213']
 
 
 # Application definition
