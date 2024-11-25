@@ -28,11 +28,16 @@ SECRET_KEY = config('DJANGO_SECRET_KEY')
 DEBUG = True
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://95ca21b6ef464eeaa702370ba4ba2a63.vfs.cloud9.eu-west-1.amazonaws.com','http://x23273518-nov25-1-env.eba-ypgnrmc9.eu-west-1.elasticbeanstalk.com','http://172.31.36.213','http://172.31.36.213'
+    'https://95ca21b6ef464eeaa702370ba4ba2a63.vfs.cloud9.eu-west-1.amazonaws.com',
+    'http://x23273518-nov25-1-env.eba-ypgnrmc9.eu-west-1.elasticbeanstalk.com',
+    'http://172.31.36.213',
+    'http://172.31.36.213'
 ]
 
 
-ALLOWED_HOSTS = ['95ca21b6ef464eeaa702370ba4ba2a63.vfs.cloud9.eu-west-1.amazonaws.com','x23273518-nov25-1-env.eba-ypgnrmc9.eu-west-1.elasticbeanstalk.com','172.31.36.213']
+ALLOWED_HOSTS = ['95ca21b6ef464eeaa702370ba4ba2a63.vfs.cloud9.eu-west-1.amazonaws.com',
+                'x23273518-nov25-1-env.eba-ypgnrmc9.eu-west-1.elasticbeanstalk.com',
+                '172.31.36.213']
 
 
 # Application definition
@@ -146,9 +151,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')  # Your email address
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')    # Your email password
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER 
-
-
-
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
