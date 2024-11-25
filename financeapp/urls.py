@@ -15,7 +15,7 @@ urlpatterns = [
          views.edit_transaction, name='edit_transaction'),
     path('transactions/delete/<int:transaction_id>/',
          views.delete_transaction, name='delete_transaction'),
-    
+
     path('view_budget/', views.view_budget, name='view_budget'),
     path('savings-goals/', views.savings_goals_view, name='savings_goals'),
     path('savings-goals/add/', views.add_savings_goal, name='add_savings_goal'),
@@ -39,7 +39,7 @@ urlpatterns = [
     path('gallery/', views.image_gallery, name='image_gallery'),
     path('delete-image/<int:image_id>/', views.delete_image, name='delete_image'),
     path('currency/', views.currency_converter, name='currency_converter'),
-    
+
 
 ]
 

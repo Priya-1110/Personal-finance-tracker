@@ -33,7 +33,6 @@ class Budget(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     alert_sent = models.BooleanField(default=False)
-    
 
     def __str__(self):
         return f"{self.user}'s Budget: ${self.total_amount}"
@@ -80,8 +79,9 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"Notification for {self.user}: {self.message}" # Corrected to access user directly
-        
+
 class UserImage(models.Model):
+    """Represents the user to upload images"""
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='media/user_images/')
     uploaded_at = models.DateTimeField(auto_now_add=True)

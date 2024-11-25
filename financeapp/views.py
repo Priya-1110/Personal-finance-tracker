@@ -10,47 +10,45 @@ from django.contrib.auth import login, authenticate, logout as auth_logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from django.views.decorators.http import require_POST
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.db.models import Sum
 from django.db import transaction
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.conf import settings
-from .forms import UserRegisterForm,BudgetForm,ContactForm,SavingsGoalForm,SavingsTransactionForm
-from .models import Transaction,Budget,Notification,SavingsGoal
-from .forms import UserImageForm
-from django.shortcuts import render
-from django.http import JsonResponse
-import base64
-import os
-from .models import UserImage
-from django.utils import timezone
+from .forms import (
+    UserRegisterForm,
+    BudgetForm,
+    ContactForm,
+    SavingsGoalForm,
+    SavingsTransactionForm,
+    UserImageForm
+)
+from .models import Transaction, Budget, Notification, SavingsGoal, UserImage
 from datetime import timedelta
 
 
 def home(request):
     """
-   displays homepage with an option to login or regiser
+    Displays homepage with an option to login or register.
     """
     return render(request, 'home.html')
 
+
 def register(request):
     """
-    Allows the user to register with their email id
+    Allows the user to register with their email ID.
     """
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data.get('email')
-
-            # Check if the email is already registered and active
             if User.objects.filter(email=email, is_active=True).exists():
                 form.add_error('email', 'This email is already registered.')
             else:
-                # If email is new, create the user
                 user = form.save()
-                login(request, user)  # Automatically log the user in
+                login(request, user)
                 messages.success(request, f'Account created for {email}. You are now logged in.')
                 return redirect('dashboard')
     else:
@@ -58,9 +56,10 @@ def register(request):
 
     return render(request, 'registration/register.html', {'form': form})
 
+
 def login_view(request):
     """
-    allows the registered user to login
+    Allows the registered user to log in.
     """
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
@@ -70,70 +69,54 @@ def login_view(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('dashboard')  # Redirect to the dashboard after successful login
+                return redirect('dashboard')
     else:
-        form = AuthenticationForm()  # If not a POST request, create an empty login form
+        form = AuthenticationForm()
     return render(request, 'registration/login.html', {'form': form})
+
 
 @login_required
 def dashboard(request):
     """
-    Displays the main page after logging in
+    Displays the main page after logging in.
     """
     return render(request, 'dashboard.html')
-    
+
 
 @login_required
 def view_budget(request):
     """
-    Allows the user to input their budget and keep track of their expenses.
+    Allows the user to input their budget and keep track of expenses.
     """
-    budget, _ = Budget.objects.get_or_create(user=request.user)  # pylint: disable=no-member
-    transactions = Transaction.objects.filter(user=request.user)  # pylint: disable=no-member
+    budget, _ = Budget.objects.get_or_create(user=request.user)
+    transactions = Transaction.objects.filter(user=request.user)
 
-    # Calculate income, expenses, and balance (Moved to the top)
     total_income = sum(t.amount for t in transactions if t.type == Transaction.INCOME)
     total_expenses = sum(t.amount for t in transactions if t.type == Transaction.EXPENSE)
     balance = total_income - total_expenses
-    budget_difference = budget.total_amount - total_expenses  # Define here
+    budget_difference = budget.total_amount - total_expenses
 
     if request.method == 'POST':
         form = BudgetForm(request.POST, instance=budget)
         if form.is_valid():
-            with transaction.atomic(): # pylint: disable=undefined-variable
+            with transaction.atomic():
                 form.save()
-
-                # *** Send Notification Only if Budget Changes ***
                 if form.has_changed():
-                    # Delete existing budget notifications for the user
-                    Notification.objects.filter( # pylint: disable=no-member
-                    user=request.user,
-                    link=reverse('view_budget')
-                    ).delete()
-
-                    # Create a new notification
+                    Notification.objects.filter(user=request.user, link=reverse('view_budget')).delete()
                     create_notification(
                         request.user,
-                        message=(
-                            f"You have exceeded your total budget for this month! "
-                            f"You are ${abs(budget_difference):.2f} over budget."
-                        ),
+                        message=f"You have exceeded your total budget for this month! You are ${abs(budget_difference):.2f} over budget.",
                         link=reverse('view_budget')
                     )
             return redirect('view_budget')
     else:
         form = BudgetForm(instance=budget)
-    if total_expenses > budget.total_amount:
-        # Delete existing budget notifications for the user
-        Notification.objects.filter(user=request.user, link=reverse('view_budget')).delete() # pylint: disable=no-member
 
-        # Create a new notification
+    if total_expenses > budget.total_amount:
+        Notification.objects.filter(user=request.user, link=reverse('view_budget')).delete()
         create_notification(
             request.user,
-            message=(
-                f"You have exceeded your total budget for this month! "
-                f"You are ${abs(budget_difference):.2f} over budget."
-            ),
+            message=f"You have exceeded your total budget for this month! You are ${abs(budget_difference):.2f} over budget.",
             link=reverse('view_budget')
         )
 
@@ -148,14 +131,13 @@ def view_budget(request):
     }
     return render(request, 'view_budget.html', context)
 
+
 @login_required
 def savings_goals_view(request):
     """
-    Displays a list of the user's savings goals
+    Displays a list of the user's savings goals.
     """
-    goals = SavingsGoal.objects.filter(user=request.user) # pylint: disable=no-member
-
-    # Calculate and add target_dollars and current_dollars to each goal
+    goals = SavingsGoal.objects.filter(user=request.user)
     for goal in goals:
         goal.target_dollars = goal.target_amount
         goal.current_dollars = goal.current_amount
@@ -166,7 +148,7 @@ def savings_goals_view(request):
 @login_required
 def add_savings_goal(request):
     """
-    Takes input from the user about their savings goals and adds it to the database
+    Takes input from the user about their savings goals and adds it to the database.
     """
     if request.method == 'POST':
         form = SavingsGoalForm(request.POST)
@@ -178,26 +160,23 @@ def add_savings_goal(request):
     else:
         form = SavingsGoalForm()
     return render(request, 'add_savings_goal.html', {'form': form})
-    
+
+
 @login_required
 def log_savings(request, goal_id):
     """
-    Allows the user to log their savings for a particular goal
+    Allows the user to log their savings for a particular goal.
     """
     goal = get_object_or_404(SavingsGoal, pk=goal_id, user=request.user)
-    
     if request.method == 'POST':
         form = SavingsTransactionForm(request.POST)
         if form.is_valid():
             transaction = form.save(commit=False)
             transaction.goal = goal
             transaction.save()
-
-            # Update goal's current amount
             goal.current_amount += transaction.amount
             goal.save()
 
-            # Check if the goal has reached 100%
             if goal.current_amount >= goal.target_amount:
                 message = f"Congratulations! You've reached your savings goal of ${goal.target_amount:.2f}."
                 create_notification(request.user, message, link=f"/goals/{goal.id}/")
@@ -207,35 +186,12 @@ def log_savings(request, goal_id):
         form = SavingsTransactionForm()
 
     return render(request, 'log_savings.html', {'form': form, 'goal': goal})
-    
-
-# @login_required
-# def log_savings(request, goal_id):
-#     """
-#     Allows the user to log their savings for a particular goal
-#     """
-#     goal = get_object_or_404(SavingsGoal, pk=goal_id, user=request.user)
-#     if request.method == 'POST':
-#         form = SavingsTransactionForm(request.POST)
-#         if form.is_valid():
-#             transaction = form.save(commit=False)
-#             transaction.goal = goal
-#             transaction.save()
-
-#             # Update goal's current amount
-#             goal.current_amount += transaction.amount
-#             goal.save()
-
-#             return redirect('savings_goals')
-#     else:
-#         form = SavingsTransactionForm()
-#     return render(request, 'log_savings.html', {'form': form, 'goal': goal})
 
 
 @login_required
 def add_transaction(request):
     """
-    allows the user to add all kind of transactions
+    Allows the user to add all kinds of transactions.
     """
     if request.method == 'POST':
         amount = request.POST.get('amount')
@@ -243,11 +199,9 @@ def add_transaction(request):
         category = request.POST.get('category')
         transaction_type = request.POST.get('type')
 
-        # Ensure date input is in the correct format and timezone
         if date:
             date = timezone.datetime.strptime(date, "%Y-%m-%d").date()
 
-        # Create and save the transaction
         transaction = Transaction(
             user=request.user,
             amount=amount,
@@ -256,11 +210,9 @@ def add_transaction(request):
             type=transaction_type
         )
         transaction.save()
-
-        # Redirect to the transactions view or dashboard after saving
-        return redirect('view_transactions')
-
+        return redirect('dashboard')
     return render(request, 'add_transaction.html')
+
 
 @login_required
 def view_transactions(request):
@@ -311,7 +263,7 @@ def delete_transaction(request, transaction_id):
     transaction = get_object_or_404(Transaction, id=transaction_id)  # Fetch transaction or return 404
     transaction.delete()
     return redirect('view_transactions')  # Redirect to the view transactions page
-    
+
 @login_required
 def logout(request):
     """
@@ -473,10 +425,6 @@ def mark_notification_as_read(request, notification_id):
     notification.save()
     return redirect('alerts')  # Redirect back to the alerts page
 
-
-
-
-    
 def upload_image(request):
     if request.method == 'POST':
         form = UserImageForm(request.POST, request.FILES)
@@ -488,13 +436,13 @@ def upload_image(request):
             form = UserImageForm()  # Clear the form after successful upload
     else:
         form = UserImageForm()
-    
+
     return render(request, 'upload_image.html', {'form': form})
-    
+
 def image_gallery(request):
     user_images = UserImage.objects.filter(user=request.user)
     return render(request, 'image_gallery.html', {'user_images': user_images})
-    
+
 @login_required
 def delete_image(request, image_id):
     image = get_object_or_404(UserImage, id=image_id, user=request.user)
@@ -506,7 +454,7 @@ def delete_image(request, image_id):
 
     messages.error(request, 'Invalid request.')
     return redirect('dashboard')
-    
+
 
 API_URL = "https://api.exchangerate.host/convert"
 API_KEY = "68d3237580165ad3c12880c9f14e4ec0"  # Directly hardcoding the API key
