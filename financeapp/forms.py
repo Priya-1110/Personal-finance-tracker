@@ -12,8 +12,12 @@ email_regex = RegexValidator(
 )
 name_regex = RegexValidator(
     regex=r'^[a-zA-Z\s-]{2,30}$',
-    message="Name should only contain letters, spaces, or hyphens, and be between 2 to 30 characters long."
+    message=(
+        "Name should only contain letters, spaces, or hyphens, "
+        "and be between 2 to 30 characters long."
+    )
 )
+
 
 class UserRegisterForm(UserCreationForm): # pylint: disable=too-many-ancestors
     """
@@ -93,11 +97,15 @@ class ContactForm(forms.Form):
         ]
     )
     message = forms.CharField(
-        widget=forms.Textarea(attrs={'placeholder': 'Your Message'}),
-        validators=[
-            RegexValidator(regex=r'^.{10,}$', message="Message must be at least 10 characters long.")
-        ]
-    )
+    widget=forms.Textarea(attrs={'placeholder': 'Your Message'}),
+    validators=[
+        RegexValidator(
+            regex=r'^.{10,}$',
+            message="Message must be at least 10 characters long."
+        )
+    ]
+)
+
 
 class SavingsGoalForm(forms.ModelForm):
     """
@@ -140,5 +148,8 @@ class UserImageForm(forms.ModelForm):
     Form for uploading a user image
     """
     class Meta: # pylint: disable=too-few-public-methods
+        """
+        Meta class for userimage fields
+        """
         model = UserImage
         fields = ['image']
