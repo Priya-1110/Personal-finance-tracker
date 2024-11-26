@@ -412,11 +412,11 @@ def contact_view(request):
             )
             messages.success(request, "Your message has been sent successfully!")
             return redirect('contact')  # Redirect to the contact view itself
-        # Clear the form and prepare for a new submission
+    else:
+        # Initialize the form for GET requests
         form = ContactForm()
+
     return render(request, 'contact.html', {'form': form})
-
-
 def create_notification(user, message, link=None):
     """
     Creates an in-app notification for the specified user.
