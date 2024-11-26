@@ -84,13 +84,15 @@ def view_budget(request):
     """
     Allows the user to input their budget and keep track of expenses.
     """
-    budget, _ = Budget.objects.get_or_create(user=request.user) # pylint: disable=no-member
-    transactions = Transaction.objects.filter(user=request.user) # pylint: disable=no-member
+    budget, _ = Budget.objects.get_or_create(user=request.user)  # pylint: disable=no-member
+    transactions = Transaction.objects.filter(user=request.user)  # pylint: disable=no-member
 
     total_income = sum(t.amount for t in transactions if t.type == Transaction.INCOME)
     total_expenses = sum(t.amount for t in transactions if t.type == Transaction.EXPENSE)
     balance = total_income - total_expenses
     budget_difference = budget.total_amount - total_expenses
+
+    form = BudgetForm(instance=budget)
 
     if request.method == 'POST':
         form = BudgetForm(request.POST, instance=budget)
@@ -111,22 +113,22 @@ def view_budget(request):
                         link=reverse('view_budget')
                     )
                 return redirect('view_budget')
-        else:
-            form = BudgetForm(instance=budget)
-        if total_expenses > budget.total_amount:
-            Notification.objects.filter(  # pylint: disable=no-member
-                user=request.user,
-                link=reverse('view_budget')
-            ).delete()  # pylint: disable=no-member
-            create_notification(
-                request.user,
-                message=(
-                    f"You have exceeded your total budget for this month! "
-                    f"You are ${abs(budget_difference):.2f} over budget."
-                ),
-                link=reverse('view_budget')
-            )
-        context = {
+
+    if total_expenses > budget.total_amount:
+        Notification.objects.filter(  # pylint: disable=no-member
+            user=request.user,
+            link=reverse('view_budget')
+        ).delete()  # pylint: disable=no-member
+        create_notification(
+            request.user,
+            message=(
+                f"You have exceeded your total budget for this month! "
+                f"You are ${abs(budget_difference):.2f} over budget."
+            ),
+            link=reverse('view_budget')
+        )
+
+    context = {
         'budget': budget,
         'transactions': transactions,
         'total_income': total_income,
@@ -184,7 +186,11 @@ def log_savings(request, goal_id):
             goal.save()
 
             if goal.current_amount >= goal.target_amount:
-                message = f"Congratulations! You've reached your savings goal of ${goal.target_amount:.2f}."
+                message = (
+                    f"Congratulations! You've reached your savings goal of "
+                    f"${goal.target_amount:.2f}."
+                )
+
                 create_notification(request.user, message, link=f"/goals/{goal.id}/")
 
             return redirect('savings_goals')
@@ -267,7 +273,7 @@ def delete_transaction(request, transaction_id):
     """
     Permits the user to delete the transaction.
     """
-    deletable_transaction = get_object_or_404(Transaction, id=transaction_id)  # Fetch transaction or return 404
+    deletable_transaction = get_object_or_404(Transaction, id=transaction_id)
     # Log deletion for audit purposes using lazy % formatting
     logger.info("User %s deleted transaction ID %d", request.user, transaction_id)
     deletable_transaction.delete()
@@ -546,9 +552,17 @@ def currency_converter(request):
                     "amount": amount,
                 }
                 return render(request, "currency_converter/result.html", context)
-            return render(request, "currency_converter/index.html", {"error": "Conversion failed, invalid response."})
+            return render(
+                request,
+                "currency_converter/index.html",
+                {"error": "Conversion failed, invalid response."},
+            )
+        return render(
+        request,
+        "currency_converter/index.html",
+        {"error": "Failed to fetch currency rates."},
+    )
 
-        return render(request, "currency_converter/index.html", {"error": "Failed to fetch currency rates."})
 
     return render(request, "currency_converter/index.html")
     
