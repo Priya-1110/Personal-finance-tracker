@@ -31,13 +31,14 @@ CSRF_TRUSTED_ORIGINS = [
     'https://95ca21b6ef464eeaa702370ba4ba2a63.vfs.cloud9.eu-west-1.amazonaws.com',
     'http://x23273518-nov25-1-env.eba-ypgnrmc9.eu-west-1.elasticbeanstalk.com',
     'http://172.31.36.213',
-    'http://172.31.36.213'
+    'https://172.31.36.213','http://172.31.34.116','https://172.31.34.116'
 ]
 
 
 ALLOWED_HOSTS = ['95ca21b6ef464eeaa702370ba4ba2a63.vfs.cloud9.eu-west-1.amazonaws.com',
                 'x23273518-nov25-1-env.eba-ypgnrmc9.eu-west-1.elasticbeanstalk.com',
-                '172.31.36.213','ec2-63-35-12-112.eu-west-1.compute.amazonaws.com']
+                '172.31.36.213','ec2-63-35-12-112.eu-west-1.compute.amazonaws.com',
+                '172.31.34.116']
 
 
 # Application definition
