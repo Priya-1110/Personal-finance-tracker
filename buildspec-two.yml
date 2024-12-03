@@ -28,12 +28,16 @@ phases:
       - echo "Verifying Java installation..."
       - java -version
       - echo "Verifying Sonar Scanner installation..."
+      # Explicitly set the JAVA_HOME for Sonar Scanner
+      - export SONAR_SCANNER_OPTS="-Djava.home=$JAVA_HOME"
       - sonar-scanner -v
   build:
     commands:
       - echo "Running SonarQube Scanner..."
       - export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
       - export PATH=$JAVA_HOME/bin:$PWD/sonar-scanner/bin:$PATH
+      # Explicitly set JAVA_HOME before running sonar-scanner
+      - export SONAR_SCANNER_OPTS="-Djava.home=$JAVA_HOME"
       - sonar-scanner \
           -Dsonar.projectKey=$Project \
           -Dsonar.organization=$Organization \
