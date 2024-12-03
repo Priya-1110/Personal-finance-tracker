@@ -8,9 +8,9 @@ env:
 phases:
   install:
     runtime-versions:
-      java: openjdk8
-  pre_build:
+      java: corretto8
     commands:
+      - echo "Using AWS CodeBuild managed image with Corretto 8"
       - apt-get update
       - apt-get install -y jq
       - wget http://www-eu.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz
@@ -19,11 +19,22 @@ phases:
       - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.3.0.1492-linux.zip
       - unzip ./sonar-scanner-cli-3.3.0.1492-linux.zip
       - export PATH=$PATH:/sonar-scanner-3.3.0.1492-linux/bin/
+  pre_build:
+    commands:
+      - echo "Starting the build process"
   build:
     commands:
-      - mvn test     
+      - mvn test
       - mvn sonar:sonar -Dsonar.login=$LOGIN -Dsonar.host.url=$HOST -Dsonar.projectKey=$Project -Dsonar.organization=$Organization
       - sleep 5
-      - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=$Project >result.json
+      - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=$Project > result.json
       - cat result.json
-      - if [ $(jq -r '.projectStatus.status' result.json) = ERROR ] ; then $CODEBUILD_BUILD_SUCCEEDING -eq 0 ;fi
+      - if [ "$(jq -r '.projectStatus.status' result.json)" = "ERROR" ]; then
+          echo "Quality Gate failed.";
+          exit 1;
+        else
+          echo "Quality Gate passed.";
+        fi
+artifacts:
+  files:
+    - result.json
