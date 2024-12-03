@@ -1,16 +1,15 @@
 version: 0.2
-
 env:
   secrets-manager:
     LOGIN: sonar:sonartoken
     HOST: sonar:HOST
     Organization: sonar:Organization
     Project: sonar:Project
-
 phases:
   install:
     runtime-versions:
-      java: openjdk8
+      java: coretto8
+  pre_build:
     commands:
       - apt-get update
       - apt-get install -y jq
@@ -20,27 +19,11 @@ phases:
       - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.3.0.1492-linux.zip
       - unzip ./sonar-scanner-cli-3.3.0.1492-linux.zip
       - export PATH=$PATH:/sonar-scanner-3.3.0.1492-linux/bin/
-
   build:
     commands:
-      - echo "Running tests..."
-      - mvn test
-      - echo "Running SonarQube analysis..."
+      - mvn test     
       - mvn sonar:sonar -Dsonar.login=$LOGIN -Dsonar.host.url=$HOST -Dsonar.projectKey=$Project -Dsonar.organization=$Organization
       - sleep 5
-      - echo "Checking SonarQube quality gate status..."
-      - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=$Project > result.json
+      - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=$Project >result.json
       - cat result.json
-      - |
-        if [ $(jq -r '.projectStatus.status' result.json) = "ERROR" ]; then
-          echo "SonarQube Quality Gate failed."
-          exit 1
-        fi
-
-artifacts:
-  files:
-    - target/*.jar
-
-cache:
-  paths:
-    - '/root/.m2/**/*'
+      - if [ $(jq -r '.projectStatus.status' result.json) = ERROR ] ; then $CODEBUILD_BUILD_SUCCEEDING -eq 0 ;fi
