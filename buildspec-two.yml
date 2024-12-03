@@ -20,16 +20,20 @@ phases:
       - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
       - unzip sonar-scanner-cli-4.8.0.2856-linux.zip
       - mv sonar-scanner-4.8.0.2856-linux sonar-scanner
-      # Remove bundled JRE to force system Java usage
+      # Remove bundled JRE to ensure system Java is used
       - rm -rf sonar-scanner/jre
-      # Set JAVA_HOME and update PATH
+      - echo "Setting JAVA_HOME and updating PATH..."
       - export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
       - export PATH=$JAVA_HOME/bin:$PWD/sonar-scanner/bin:$PATH
-      - echo "Java version:"
+      - echo "Verifying Java installation..."
       - java -version
+      - echo "Verifying Sonar Scanner installation..."
+      - sonar-scanner -v
   build:
     commands:
       - echo "Running SonarQube Scanner..."
+      - export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+      - export PATH=$JAVA_HOME/bin:$PWD/sonar-scanner/bin:$PATH
       - sonar-scanner \
           -Dsonar.projectKey=$Project \
           -Dsonar.organization=$Organization \
