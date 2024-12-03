@@ -13,12 +13,12 @@ phases:
     commands:
       - yum update -y
       - yum install -y jq
-      - wget http://www-eu.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz
-      - tar xzf apache-maven-3.5.4-bin.tar.gz
-      - ln -s apache-maven-3.5.4 maven
-      - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.3.0.1492-linux.zip
-      - unzip ./sonar-scanner-cli-3.3.0.1492-linux.zip
-      - export PATH=$PATH:/sonar-scanner-3.3.0.1492-linux/bin/
+      - wget https://dlcdn.apache.org/maven/maven-3/3.9.5/binaries/apache-maven-3.9.5-bin.tar.gz
+      - tar xzf apache-maven-3.9.5-bin.tar.gz
+      - ln -s apache-maven-3.9.5 maven
+      - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
+      - unzip ./sonar-scanner-cli-4.8.0.2856-linux.zip
+      - export PATH=$PATH:/sonar-scanner-4.8.0.2856-linux/bin/
   build:
     commands:
       - mvn test     
