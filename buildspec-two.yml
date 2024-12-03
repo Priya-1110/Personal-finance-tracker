@@ -8,7 +8,7 @@ env:
 phases:
   install:
     runtime-versions:
-      java: coretto8
+      java: corretto11
   pre_build:
     commands:
       - apt-get update
@@ -24,6 +24,12 @@ phases:
       - mvn test     
       - mvn sonar:sonar -Dsonar.login=$LOGIN -Dsonar.host.url=$HOST -Dsonar.projectKey=$Project -Dsonar.organization=$Organization
       - sleep 5
-      - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=$Project >result.json
+      - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=$Project > result.json
       - cat result.json
-      - if [ $(jq -r '.projectStatus.status' result.json) = ERROR ] ; then $CODEBUILD_BUILD_SUCCEEDING -eq 0 ;fi
+      - |
+        if [ "$(jq -r '.projectStatus.status' result.json)" = "ERROR" ]; then
+          echo "SonarQube Quality Gate failed."
+          exit 1
+        else
+          echo "SonarQube Quality Gate passed."
+        fi
