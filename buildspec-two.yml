@@ -8,25 +8,22 @@ env:
 phases:
   install:
     runtime-versions:
-      python: 3.9
+      java: corretto11
   pre_build:
     commands:
-      - echo "Installing dependencies..."
-      - python -m pip install --upgrade pip
-      - pip install -r requirements.txt
+      - yum update -y
+      - yum install -y jq
+      - wget https://dlcdn.apache.org/maven/maven-3/3.9.5/binaries/apache-maven-3.9.5-bin.tar.gz
+      - tar xzf apache-maven-3.9.5-bin.tar.gz
+      - ln -s apache-maven-3.9.5 maven
       - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
-      - unzip sonar-scanner-cli-4.8.0.2856-linux.zip
-      - mv sonar-scanner-4.8.0.2856-linux sonar-scanner
-      - export PATH=$PATH:$PWD/sonar-scanner/bin
-      - echo "SonarQube Scanner installed successfully!"
+      - unzip ./sonar-scanner-cli-4.8.0.2856-linux.zip
+      - export PATH=$PATH:/sonar-scanner-4.8.0.2856-linux/bin/
   build:
     commands:
-      - echo "Running SonarQube Scanner..."
-      - sonar-scanner \
-          -Dsonar.projectKey=$Project \
-          -Dsonar.organization=$Organization \
-          -Dsonar.host.url=$HOST \
-          -Dsonar.login=$LOGIN
+      - mvn test     
+      - mvn sonar:sonar -Dsonar.login=$LOGIN -Dsonar.host.url=$HOST -Dsonar.projectKey=$Project -Dsonar.organization=$Organization
+      - sleep 5
       - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=$Project > result.json
       - cat result.json
       - |
@@ -36,7 +33,3 @@ phases:
         else
           echo "SonarQube Quality Gate passed."
         fi
-artifacts:
-  files:
-    - result.json
-  discard-paths: no
