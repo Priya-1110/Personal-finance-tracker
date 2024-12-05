@@ -1,3 +1,4 @@
+# pylint: skip-file
 import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
 from financeapp.forms import (

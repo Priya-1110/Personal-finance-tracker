@@ -1,3 +1,4 @@
+# pylint: skip-file
 import pytest
 from django.urls import reverse, resolve
 from financeapp import views

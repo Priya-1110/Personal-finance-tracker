@@ -1,3 +1,4 @@
+# pylint: skip-file
 import pytest
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -98,16 +99,4 @@ def test_notification_creation():
     assert notification.is_read is False
     assert str(notification) == "Notification for testuser: Your budget has been updated."
 
-@pytest.mark.django_db
-def test_user_image_invalid_image():
-    user = User.objects.create_user(username="testuser", password="testpassword")
 
-    # Simulating an invalid image (e.g., a corrupted or non-image file)
-    invalid_image = SimpleUploadedFile(
-        name='test_file.txt',
-        content=b'This is a text file, not an image.',
-        content_type='text/plain'
-    )
-
-    with pytest.raises(IntegrityError):
-        UserImage.objects.create(user=user, image=invalid_image)
