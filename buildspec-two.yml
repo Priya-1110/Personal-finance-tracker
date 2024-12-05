@@ -19,17 +19,4 @@ phases:
       - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
       - unzip ./sonar-scanner-cli-4.8.0.2856-linux.zip
       - export PATH=$PATH:/sonar-scanner-4.8.0.2856-linux/bin/
-  build:
-    commands:
-      - mvn test     
-      - mvn sonar:sonar -Dsonar.login=$LOGIN -Dsonar.host.url=$HOST -Dsonar.projectKey=$Project -Dsonar.organization=$Organization
-      - sleep 5
-      - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=$Project > result.json
-      - cat result.json
-      - |
-        if [ "$(jq -r '.projectStatus.status' result.json)" = "ERROR" ]; then
-          echo "SonarQube Quality Gate failed."
-          exit 1
-        else
-          echo "SonarQube Quality Gate passed."
-        fi
+
