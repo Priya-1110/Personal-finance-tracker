@@ -1,63 +1,41 @@
 version: 0.2
 
+env:
+  variables:
+    DJANGO_SETTINGS_MODULE: adminproject.settings  # Ensure the settings are configured
+
 phases:
-
   install:
-
     runtime-versions:
-
       python: 3.9
-
     commands:
-
       - echo Installing dependencies...
-
       - pip install --upgrade pip
-
       - pip install -r requirements.txt
-
       - pip install pylint pytest
 
-
   pre_build:
-
     commands:
-
       # Display the Python version for debugging purposes
       - python --version
+      - echo Applying migrations...
+      - python manage.py migrate  # Apply migrations before running tests
       # Run pylint on the root directory and subdirectories
       - pylint $CODEBUILD_SRC_DIR/*.py
       - pylint $CODEBUILD_SRC_DIR/adminproject/*.py
       - pylint $CODEBUILD_SRC_DIR/financeapp/*.py
 
   build:
-
     commands:
-
       - echo Running tests with pytest...
-
       - pytest --maxfail=5 --disable-warnings --tb=short
-
-      - echo Applying migrations...
-
-      - python3 manage.py migrate
-
       - echo Collecting static files...
-
-      - python3 manage.py collectstatic --noinput
-
-
+      - python manage.py collectstatic --noinput
 
   post_build:
-
     commands:
-
       - echo Post-build phase completed successfully!
 
-
-
 artifacts:
-
   files:
-
     - '/*'
