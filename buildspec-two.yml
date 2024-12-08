@@ -1,22 +1,39 @@
 version: 0.2
+
 env:
-  secrets-manager:
-    LOGIN: sonar:sonartoken
-    HOST: sonar:HOST
-    Organization: sonar:Organization
-    Project: sonar:Project
+  variables:
+    DJANGO_SETTINGS_MODULE: adminproject.settings  # Ensure the settings are configured
+
 phases:
   install:
     runtime-versions:
-      java: corretto11
+      python: 3.9
+    commands:
+      - echo Installing dependencies...
+      - pip install --upgrade pip
+      - pip install -r requirements.txt
+      - pip install pytest  # Only install pytest
+
   pre_build:
     commands:
-      - yum update -y
-      - yum install -y jq
-      - wget https://dlcdn.apache.org/maven/maven-3/3.9.5/binaries/apache-maven-3.9.5-bin.tar.gz
-      - tar xzf apache-maven-3.9.5-bin.tar.gz
-      - ln -s apache-maven-3.9.5 maven
-      - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
-      - unzip ./sonar-scanner-cli-4.8.0.2856-linux.zip
-      - export PATH=$PATH:/sonar-scanner-4.8.0.2856-linux/bin/
+      # Display the Python version for debugging purposes
+      - python --version
+      - echo Applying migrations...
+      - python manage.py migrate  # Apply migrations before running tests
+
+  build:
+    commands:
+      - echo Running tests with pytest...
+      - pytest --maxfail=5 --disable-warnings --tb=short
+      - echo Collecting static files...
+      - python manage.py collectstatic --noinput
+
+  post_build:
+    commands:
+      - echo Post-build phase completed successfully!
+
+artifacts:
+  files:
+    - '/*'
+
 

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Currency Converter</title>
      {% load static %}
-    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'css/currency_index.css' %}">
 </head>
 <body>
     <h1>Currency Converter</h1>
@@ -24,5 +24,8 @@
         <br>
         <button type="submit">Convert</button>
     </form>
+    <a href="{% url 'dashboard' %}" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
 </body>
 </html>

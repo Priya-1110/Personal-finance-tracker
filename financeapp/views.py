@@ -519,50 +519,69 @@ def delete_image(request, image_id):
     messages.error(request, 'Invalid request.')
     return redirect('dashboard')
 
+API_URL = "https://api.exchangerate.host/convert"
+API_KEY = "68d3237580165ad3c12880c9f14e4ec0"  
+
+import requests
+from django.shortcuts import render
+
+# Replace these with actual values
+API_URL = "https://api.exchangerate-api.com/v4/latest/"
+API_KEY = "your_api_key_here"
 
 def currency_converter(request):
     """
     Converts currency based on user input using the Exchange Rate API.
     """
     if request.method == "POST":
-        base = request.POST.get("base")  # Base currency
-        target = request.POST.get("target")  # Target currency
+        base = request.POST.get("base").upper()  # Base currency (e.g., USD)
+        target = request.POST.get("target").upper()  # Target currency (e.g., EUR)
         amount = float(request.POST.get("amount", 0))  # Amount to convert
 
         # API request
-        response = requests.get(
-            API_URL,
-            params={
-                "access_key": API_KEY,
-                "from": base,
-                "to": target,
-                "amount": amount,
-            },
-            timeout=5,  # Added timeout
-        )
+        try:
+            response = requests.get(
+                f"{API_URL}{base}",
+                params={"access_key": API_KEY},
+                timeout=5,  # Added timeout
+            )
 
-        if response.status_code == 200:
-            data = response.json()
-            if 'result' in data:
-                converted_amount = data['result']
-                context = {
-                    "converted_amount": converted_amount,
-                    "base": base,
-                    "target": target,
-                    "amount": amount,
-                }
-                return render(request, "currency_converter/result.html", context)
+            if response.status_code == 200:
+                data = response.json()
+
+                # Check if the target currency is in the response
+                if target in data["rates"]:
+                    rate = data["rates"][target]
+                    converted_amount = amount * rate
+
+                    context = {
+                        "converted_amount": converted_amount,
+                        "base": base,
+                        "target": target,
+                        "amount": amount,
+                        "rate": rate,  # Add the exchange rate to the context
+                    }
+                    return render(request, "currency_converter/result.html", context)
+                else:
+                    return render(
+                        request,
+                        "currency_converter/index.html",
+                        {"error": f"Invalid target currency: {target}"},
+                    )
+
             return render(
                 request,
                 "currency_converter/index.html",
-                {"error": "Conversion failed, invalid response."},
+                {"error": "Failed to fetch currency rates. Please try again later."},
             )
-        return render(
-        request,
-        "currency_converter/index.html",
-        {"error": "Failed to fetch currency rates."},
-    )
 
+        except requests.exceptions.RequestException as e:
+            return render(
+                request,
+                "currency_converter/index.html",
+                {"error": f"Request failed: {str(e)}"},
+            )
 
     return render(request, "currency_converter/index.html")
+
     
