@@ -519,6 +519,8 @@ def delete_image(request, image_id):
     messages.error(request, 'Invalid request.')
     return redirect('dashboard')
 
+API_URL ="https://api.exchangerate-api.com/v4/latest/"
+API_KEY = "68d3237580165ad3c12880c9f14e4ec0"
 
 def currency_converter(request):
     """
