@@ -519,15 +519,6 @@ def delete_image(request, image_id):
     messages.error(request, 'Invalid request.')
     return redirect('dashboard')
 
-API_URL = "https://api.exchangerate.host/convert"
-API_KEY = "68d3237580165ad3c12880c9f14e4ec0"  
-
-import requests
-from django.shortcuts import render
-
-# Replace these with actual values
-API_URL = "https://api.exchangerate-api.com/v4/latest/"
-API_KEY = "your_api_key_here"
 
 def currency_converter(request):
     """
@@ -562,13 +553,12 @@ def currency_converter(request):
                         "rate": rate,  # Add the exchange rate to the context
                     }
                     return render(request, "currency_converter/result.html", context)
-                else:
-                    return render(
-                        request,
-                        "currency_converter/index.html",
-                        {"error": f"Invalid target currency: {target}"},
-                    )
 
+                return render(
+                    request,
+                    "currency_converter/index.html",
+                    {"error": f"Invalid target currency: {target}"},
+                )
             return render(
                 request,
                 "currency_converter/index.html",
@@ -583,5 +573,4 @@ def currency_converter(request):
             )
 
     return render(request, "currency_converter/index.html")
-
     
